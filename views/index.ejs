@@ -20,8 +20,13 @@
           <img src="/images/print.png" alt="print" />
           <img src="/images/save.png" alt="save" />
           <img src="/images/download.png" alt="download" />
+          <img src="/images/firstpage.jpg" alt="first page" />
           <img src="/images/previous.png" alt="previous" />
-          <img src="/images/next.png" alt="next" />
+          <input type="textbox" id="currentpage" maxlength="3" value = <%= currentpage %> />
+          <img id="slash-img" src="/images/slashline.png" alt="slash" />
+          <span id="totalpages"><%= totalPages %></span>
+          <img id="next-img" src="/images/next.png" alt="next" />
+          <img src="/images/lastpage.png" alt="last page" />
           <img src="/images/zoom-in.png" alt="zoom-in" />
           <img src="/images/zoom-out.jpg" alt="zoom-out" />
           <img src="/images/clockwise.png" alt="clockwise" />
@@ -36,7 +41,7 @@
         <canvas id="canvas"></canvas>
          <button>Press</button>
          <div id="mydiv"></div>
-      
+
       </div>
     </div>
       <script src="javascripts/myscript.js" />

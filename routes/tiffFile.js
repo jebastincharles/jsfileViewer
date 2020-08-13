@@ -70,7 +70,7 @@ context.font = 'bold 70pt Menlo'
 context.textAlign = 'center'
 context.fillStyle = '#fff'
 context.fillText(text, 600, 170)
-  res.render('index', { title: 'Express', data: ""});
+  res.render('index', { title: 'Express', data: "", currentpage: 1, totalPages: 1});
 });
 
 router.get('/tt', function(req, res, next) {
