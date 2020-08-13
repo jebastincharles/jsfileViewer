@@ -17,6 +17,7 @@
     "http-errors": "~1.6.3",
     "image-js": "^0.21.9",
     "jquery": "^3.5.1",
+    "js-image-zoom": "^0.7.0",
     "morgan": "~1.9.1",
     "pango": "0.0.3",
     "pngjs": "^5.0.0",

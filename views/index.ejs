@@ -16,7 +16,7 @@
 
     <div>
       <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="container">
+        <div class="navBar">
           <img src="/images/print.png" alt="print" />
           <img src="/images/save.png" alt="save" />
           <img src="/images/download.png" alt="download" />
@@ -27,21 +27,18 @@
           <span id="totalpages"><%= totalPages %></span>
           <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage('next')" />
           <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage('last')" />
-          <img src="/images/zoom-in.png" alt="zoom-in" onclick="zoom()" />
-          <img src="/images/zoom-out.jpg" alt="zoom-out" />
+          <img src="/images/zoom-in.png" alt="zoom-in" onclick="zoomout()" />
+          <img src="/images/zoom-out.jpg" alt="zoom-out" onclick="zoomin()" />
           <img src="/images/clockwise.png" alt="clockwise" onclick="drawRotated(90)" />
           <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(270)" />
           <img src="/images/thumbnail.jpg" alt="thumbnail" />
         </div>
       </nav>
       <div class="jumbotron" style="padding:40px;" >
-        <h1><%= title %></h1>
-        <p>Welcome to <%= title %></p>
-        <input type="textbox" id="refCurrentPage" value=""> </input>
-
-         <button>Press</button>
-         <canvas id="canvas"></canvas>
-         <div id="mydiv"></div>
+        <input type="hidden" id="refCurrentPage" value=""> </input>
+         <div class="container">
+           <div id="mydiv"></div>
+         </div>
 
 
       </div>

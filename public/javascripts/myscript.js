@@ -29,10 +29,24 @@ var draw = function(scale, translatePos, canvas){
   imgOut.src = canvas.toDataURL();
 }
 
+var zoomin = function(){
+  var imgOut = document.getElementById('tiffPage');
+  imgOut.style.width = (imgOut.width - 25) + "px";
+}
+
+var zoomout = function(){
+  var imgOut = document.getElementById('tiffPage');
+  var containerWidth = $(".container").width();
+  if (containerWidth < (imgOut.width + 25)) {
+    imgOut.style.overflow = 'scroll';
+  }
+  imgOut.style.width = (imgOut.width + 25) + "px";
+}
+
 var zoom = function(){
   var imgOut = document.getElementById('tiffPage');
-  //imgOut.style.width = (imgOut.width + 100) + "px";
-
+  imgOut.style.width = (imgOut.width + 50) + "px";
+return;
 //return;
 	var  canvas = document.createElement("canvas");
   	var ctx=canvas.getContext("2d");
@@ -45,8 +59,8 @@ var zoom = function(){
 
     canvas.width=1200;
     canvas.height=800;
-    //canvas.width=imgOut.width;
-    //canvas.height=imgOut.height;
+    canvas.width=imgOut.width;
+    canvas.height=imgOut.height;
     ///////////////////////////////////
 
     //To center the img I divide the x and y 22 factor
@@ -90,6 +104,7 @@ var renderPage = function (event, page) {
       $('#totalpages').html(data.totalPages);
       $('#currentpage').html(data.currentpage);
       $("input[id=refCurrentPage]").html(data.currentpage);
+
     //  $('#refCurrentPage')
     //  alert($('#refCurrentPage').val());
     },
