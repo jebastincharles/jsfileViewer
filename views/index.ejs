@@ -3,7 +3,7 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap-theme.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -20,24 +20,24 @@
           <img src="/images/print.png" alt="print" />
           <img src="/images/save.png" alt="save" />
           <img src="/images/download.png" alt="download" />
-          <img src="/images/firstpage.jpg" alt="first page" />
-          <img src="/images/previous.png" alt="previous" />
-          <input type="textbox" id="currentpage" maxlength="3" value = <%= currentpage %> />
+          <img id="first-img" src="/images/firstpage.jpg" alt="first page" onclick="renderPage('first')" />
+          <img id="previous-img" src="/images/previous.png" alt="previous" onclick="renderPage('prev')" />
+          <input type="textbox" id="currentpage" maxlength="3" value = "<%= currentpage %>" />
           <img id="slash-img" src="/images/slashline.png" alt="slash" />
           <span id="totalpages"><%= totalPages %></span>
-          <img id="next-img" src="/images/next.png" alt="next" />
-          <img src="/images/lastpage.png" alt="last page" />
+          <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage('next')" />
+          <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage('last')" />
           <img src="/images/zoom-in.png" alt="zoom-in" />
           <img src="/images/zoom-out.jpg" alt="zoom-out" />
-          <img src="/images/clockwise.png" alt="clockwise" />
-          <img src="/images/counter-clockwise.png" alt="counter-clockwise" />
+          <img src="/images/clockwise.png" alt="clockwise" onclick="drawRotated(90)" />
+          <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(270)" />
           <img src="/images/thumbnail.jpg" alt="thumbnail" />
         </div>
       </nav>
       <div class="jumbotron" style="padding:40px;" >
         <h1><%= title %></h1>
         <p>Welcome to <%= title %></p>
-
+        <input type="textbox" id="refCurrentPage" value=""> </input>
         <canvas id="canvas"></canvas>
          <button>Press</button>
          <div id="mydiv"></div>

@@ -24,41 +24,7 @@ const UTIF = require("UTIF");
 router.get('/', function(req, res, next) {
   var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/MARBLES.TIF";
   var filename1 = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/G31D1.TIF";
-/*  let image =  Image.load(filename);
-  let grey = image
-  .grey() // convert the image to greyscale.
-    .resize({ width: 200 })
-    .rotate(180); // rotate the image clockwise by 30 degrees.
-grey.save(filename1); */
 
-/*sharp(filename)
-  .rotate()
-  .resize(200)
-  .toBuffer()
-  .then( data => { console.log("data..."+data); })
-  .catch( err => { console.log("err..."+err); }); */
-/*
-var input = fs.readFileSync(filename);
-var image = new Tiff({ buffer: input });
-
-console.log(filename + ': width = ' + image.width() + ', height = ' + image.height());
-var canvas = image.toCanvas(); */
-/*  const canvas = new canvasLibrary.createCanvas(200, 200);
-  const canvasCtx = canvas.getContext('2d');
-
-  // Write "Awesome!"
-  canvasCtx.font = '30px Impact';
-  canvasCtx.rotate(0.1);
-  canvasCtx.fillText('Awesome!', 50, 100);
-
-  // Draw line under text
-  var text = canvasCtx.measureText('Awesome!');
-  canvasCtx.strokeStyle = 'rgba(0,0,0,0.5)';
-  canvasCtx.beginPath();
-  canvasCtx.lineTo(50, 102);
-  canvasCtx.lineTo(50 + text.width, 102);
-  canvasCtx.stroke();
-  var dataUrl = canvas.toDataURL(); */
   const width = 1200
 const height = 600
 
@@ -74,77 +40,108 @@ context.fillText(text, 600, 170)
 });
 
 router.get('/tt', function(req, res, next) {
+  var currpage = req.query.page;
+
+  if (!currpage) currpage = 0;
+  else currpage = currpage -1;
+    console.log("currpage.."+currpage);
   var url ="https://file-examples-com.github.io/uploads/2017/10/file_example_TIFF_5MB.tiff";
+  var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/multiSample.tif";
+  var fileUrl = "http://localhost:3000/images/renderImg/multiSample.tif";
+/*  var result = GeoTIFF.fromUrl(fileUrl)
+    .then(tiff => {
 
-  GeoTIFF.fromUrl(url)
-  .then(tiff => {
+       tiff.getImage().then((image) => {
+        const width = image.getWidth();
+        const height = image.getHeight();
+        const tileWidth = image.getTileWidth();
+        const tileHeight = image.getTileHeight();
+        const samplesPerPixel = image.getSamplesPerPixel();
+        console.log("image.."+image);
+        console.log("width.."+width);
+        console.log("height.."+height);
+        console.log("tileWidth.."+tileWidth);
+        console.log("tileHeight.."+tileHeight);
+        console.log("samplesPerPixel.."+samplesPerPixel);
 
-     tiff.getImage().then((image) => {
-      const width = image.getWidth();
-      const height = image.getHeight();
-      const tileWidth = image.getTileWidth();
-      const tileHeight = image.getTileHeight();
-      const samplesPerPixel = image.getSamplesPerPixel();
-      console.log("image.."+image);
-      console.log("width.."+width);
-      console.log("height.."+height);
-      console.log("tileWidth.."+tileWidth);
-      console.log("tileHeight.."+tileHeight);
-      console.log("samplesPerPixel.."+samplesPerPixel);
+       var data =   image.readRGB().then((data) => {
+          const canvas = createCanvas(width, height)
+          const ctx = canvas.getContext('2d')
+          var imageData = ctx.createImageData(width, height);
+          for (var i = 0; i < data.length; i++)
+            imageData.data[i] = data[i];
+        	ctx.putImageData(imageData, 0, 0);
+          //console.log("canvas.toDataURL()>>>.."+canvas.toDataURL());
+          return canvas.toDataURL();
+            //return '<img src="' + canvas.toDataURL() + '" />';
+        })
+        data.then(value => {
+          console.log("value..."+value.length);
+          res.send('<img src="' + value + '" />');
+
+        })
+
+        /*const canvas = createCanvas(width, height)
+        const ctx = canvas.getContext('2d')
+        var imageData = ctx.createImageData(width, height);
+        for (var i = 0; i < image.length; i++)
+          imageData.data[i] = image[i];
+      	ctx.putImageData(imageData, 0, 0);
+        console.log("canvas.toDataURL().."+canvas.toDataURL());
+          res.send('<img src="' + canvas.toDataURL() + '" />'); */
+
+  /*    });
     });
-  });
-
-
-  var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/MARBLES.TIF";
-console.log("1");
+  console.log("result.."+result); */
+//res.send(result);
+  console.log("1");
   var buffer = fs.readFileSync(filename);
-  var image = new Tiff({ buffer: buffer });
-console.log("2"+JSON.stringify(image));
-  const ifds = UTIF.decode(buffer);
-  const ifd2 = tiff.decode(buffer);
-  console.log("tiff.pageCount(data)..."+tiff.pageCount(buffer))
-    console.log("tiff.isMultiPage(data)..."+tiff.isMultiPage(buffer))
-  console.log("3"+JSON.stringify(ifd2[0]));
-  console.log("3.."+typeof ifd2[0]);
-   const timage = ifds[0];
-   console.log("4"+JSON.stringify(timage));
-   UTIF.decodeImage(buffer, timage);
-console.log("5");
-var rgba = UTIF.toRGBA8(timage);
-    //const array = new Uint8ClampedArray(UTIF.toRGBA8(timage));
-    console.log("6");
-    // Forming image Data
-  //  const imageData = new ImageData(array, timage.width, timage.height);
-  //  console.log('imageData...'+imageData);
 
+  const ifds = UTIF.decode(buffer);
+  const timage = ifds[0];
+  var pageCount = ifds.length;
+  UTIF.decodeImage(buffer, timage, ifds);
+  console.log("5");
+  var rgba = UTIF.toRGBA8(timage);
+  //const array = new Uint8ClampedArray(UTIF.toRGBA8(timage));
+  console.log("6");
   const canvas = createCanvas(timage.width, timage.height)
   const ctx = canvas.getContext('2d')
   var imageData = ctx.createImageData(timage.width, timage.height);
-  for (var i = 0; i < rgba.length; i++) imageData.data[i] = rgba[i];
-			ctx.putImageData(imageData, 0, 0);
-  /*  if(timage) imageData.data.set(timage);
-      console.log("10"+imageData);
-      ctx.putImageData(imageData, timage.width, timage.height); */
+  for (var i = 0; i < rgba.length; i++)
+    imageData.data[i] = rgba[i];
+	ctx.putImageData(imageData, 0, 0);
 
-  // Write "Awesome!"
-  /*ctx.font = '30px Impact'
-  ctx.rotate(0.9)
-  ctx.fillText('Awesome!', 50, 100)timage
+// rotate
 
-  // Draw line under text
-  var text = ctx.measureText('Awesome!')
-  ctx.strokeStyle = 'rgba(0,0,0,0.5)'
-  ctx.beginPath()
-  ctx.lineTo(50, 102)
-  ctx.lineTo(50 + text.width, 102)
-  ctx.stroke() */
+/*ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Draw cat with lime helmet
+    // save the unrotated context of the canvas so we can restore it later
+    // the alternative is to untranslate & unrotate after drawing
+    ctx.save();
+
+    // move to the center of the canvas
+    ctx.translate(canvas.width/2,canvas.height/2);
+
+    // rotate the canvas to the specified degrees
+    ctx.rotate(45*Math.PI/180);
+
+    // draw the image
+    // since the context is rotated, the image will be rotated also
+    ctx.drawImage(rgba,-timage.width/2,-timage.height/2); */
+
+    // we’re done with the rotating so restore the unrotated context
+  //  context.restore();
+
+
+
+
+
+
   loadImage('C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/sample-numbers.png').then((image) => {
-    //ctx.drawImage(imageData, 50, 0, 70, 70)
-
-    console.log('<img src="' + canvas.toDataURL() + '" />')
-    res.send('<img src="' + canvas.toDataURL() + '" />');
+  console.log("ref..."+canvas.toDataURL().length);
+  var data = '<img id="tiffPage" src="' + canvas.toDataURL() + '" />';
+    res.send({ title: 'Express', data: data, currentpage: currpage + 1, totalPages: pageCount});
   })
 });
 
