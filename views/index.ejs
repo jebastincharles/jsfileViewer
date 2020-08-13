@@ -27,7 +27,7 @@
           <span id="totalpages"><%= totalPages %></span>
           <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage('next')" />
           <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage('last')" />
-          <img src="/images/zoom-in.png" alt="zoom-in" />
+          <img src="/images/zoom-in.png" alt="zoom-in" onclick="zoom()" />
           <img src="/images/zoom-out.jpg" alt="zoom-out" />
           <img src="/images/clockwise.png" alt="clockwise" onclick="drawRotated(90)" />
           <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(270)" />
@@ -38,9 +38,11 @@
         <h1><%= title %></h1>
         <p>Welcome to <%= title %></p>
         <input type="textbox" id="refCurrentPage" value=""> </input>
-        <canvas id="canvas"></canvas>
+
          <button>Press</button>
+         <canvas id="canvas"></canvas>
          <div id="mydiv"></div>
+
 
       </div>
     </div>

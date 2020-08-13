@@ -11,13 +11,67 @@ $(document).ready(function(){
   $("#currentpage").onEnter(renderPage(2)); */
 });
 
+var draw = function(scale, translatePos, canvas){
+    //var canvas = document.getElementById("myCanvas");
+  var context = canvas.getContext("2d");
+  var imgOut = document.getElementById('tiffPage');
+    // clear canvas
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+	context.save();
+	context.translate(translatePos.x, translatePos.y);
+	context.scale(scale, scale);
+
+	context.drawImage(imgOut, 0, 0, imgOut.width,    imgOut.height,     // source rectangle
+                   0, 0, canvas.width, canvas.height); // destination rectangle;
+	context.restore();
+
+  imgOut.src = canvas.toDataURL();
+}
+
+var zoom = function(){
+  var imgOut = document.getElementById('tiffPage');
+  //imgOut.style.width = (imgOut.width + 100) + "px";
+
+//return;
+	var  canvas = document.createElement("canvas");
+  	var ctx=canvas.getContext("2d");
+    var imgOut = document.getElementById('tiffPage');
+       //var canvas = document.getElementById("myCanvas");
+
+    //I add at the canvas width and height dimensions based on window outer boundaries
+    //canvas.width=window.outerWidth;
+    //canvas.height=window.outerHeight;
+
+    canvas.width=1200;
+    canvas.height=800;
+    //canvas.width=imgOut.width;
+    //canvas.height=imgOut.height;
+    ///////////////////////////////////
+
+    //To center the img I divide the x and y 22 factor
+    var translatePos = {
+        x: canvas.width/22,
+        y: canvas.height/22
+    };
+    //////////////////////////////////////////////////////
+    var scale = 1.0;
+    var scaleMultiplier = 0.92;
+    var startDragOffset = {};
+    var mouseDown = false;
+
+
+     scale /= scaleMultiplier;
+    draw(scale, translatePos, canvas);
+};
+
 //});
 
 var renderPage = function (event, page) {
   var pagVal = 0;
   var currPage = $('#currentpage').html();
   var lastPage =  $('#totalpages').html();
-  alert('currPage..'+currPage);
+  //alert('currPage..'+currPage);
   if ('first' == event) {
     pagVal = 1;
   } else if('next' == event) {
@@ -61,7 +115,7 @@ var renderPage = function (event, page) {
 //var angleInDegrees = 0;
     var drawRotated = function (degrees){
               var imgOut = document.getElementById('tiffPage');
-              alert(angleInDegrees)
+
             /*  if(angleInDegrees == 0)
                   degrees = 270;
               else
@@ -69,7 +123,7 @@ var renderPage = function (event, page) {
 
                 //  degrees = 90;
 
-                  angleInDegrees = degrees;
+
             canvas = document.createElement("canvas");
             var ctx=canvas.getContext("2d");
             canvas.style.width="20%";
