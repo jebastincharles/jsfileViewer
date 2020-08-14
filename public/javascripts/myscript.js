@@ -38,6 +38,15 @@ var download = function(){
   window.location="/tiff/download";
 }
 
+var print = function(){
+  var myWindow=window.open();
+   myWindow.document.write($('#mydiv').html());
+   myWindow.document.close();
+   myWindow.focus();
+   myWindow.print();
+   myWindow.close();
+}
+
 var zoomout = function(){
   var imgOut = document.getElementById('tiffPage');
   var containerWidth = $(".container").width();
