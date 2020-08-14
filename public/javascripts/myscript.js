@@ -34,6 +34,10 @@ var zoomin = function(){
   imgOut.style.width = (imgOut.width - 25) + "px";
 }
 
+var download = function(){
+  window.location="/tiff/download";
+}
+
 var zoomout = function(){
   var imgOut = document.getElementById('tiffPage');
   var containerWidth = $(".container").width();
