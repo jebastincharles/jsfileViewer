@@ -7,36 +7,31 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap-theme.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-
-
-
   </head>
   <body>
-
     <div>
-      <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="navBar">
-          <img src="/images/print.png" alt="print" />
-          <img src="/images/save.png" alt="save" />
-          <img src="/images/download.png" alt="download" />
-          <img id="first-img" src="/images/firstpage.jpg" alt="first page" onclick="renderPage('first')" />
-          <img id="previous-img" src="/images/previous.png" alt="previous" onclick="renderPage('prev')" />
-          <input type="textbox" id="currentpage" maxlength="3" value = "<%= currentpage %>" />
-          <img id="slash-img" src="/images/slashline.png" alt="slash" />
-          <span id="totalpages"><%= totalPages %></span>
-          <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage('next')" />
-          <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage('last')" />
-          <img src="/images/zoom-in.png" alt="zoom-in" onclick="zoomout()" />
-          <img src="/images/zoom-out.jpg" alt="zoom-out" onclick="zoomin()" />
-          <img src="/images/clockwise.png" alt="clockwise" onclick="drawRotated(90)" />
-          <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(270)" />
-          <img src="/images/thumbnail.jpg" alt="thumbnail" />
-        </div>
-      </nav>
       <div class="jumbotron" style="padding:40px;" >
         <input type="hidden" id="refCurrentPage" value=""> </input>
          <div class="container">
+           <nav class="navbar navbar-inverse navbar-static-top">
+             <div class="navBar">
+               <img src="/images/print.png" alt="print" />
+               <img src="/images/save.png" alt="save" />
+               <img src="/images/download.png" alt="download" />
+               <img id="first-img" src="/images/firstpage.jpg" alt="first page" onclick="renderPage('first')" />
+               <img id="previous-img" src="/images/previous.png" alt="previous" onclick="renderPage('prev')" />
+               <input type="textbox" id="currentpage" maxlength="3" value = "<%= currentpage %>" />
+               <img id="slash-img" src="/images/slashline.png" alt="slash" />
+               <span id="totalpages"><%= totalPages %></span>
+               <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage('next')" />
+               <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage('last')" />
+               <img src="/images/zoom-in.png" alt="zoom-in" onclick="zoomout()" />
+               <img src="/images/zoom-out.jpg" alt="zoom-out" onclick="zoomin()" />
+               <img src="/images/clockwise.png" alt="clockwise" onclick="drawRotated(90)" />
+               <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(270)" />
+               <img src="/images/thumbnail.jpg" alt="thumbnail" />
+             </div>
+           </nav>
            <div id="mydiv"></div>
          </div>
 

@@ -2,7 +2,7 @@
 
 
 $(document).ready(function(){
- renderPage(1);
+ renderPage(null, 1);
   /*$("#button").on("click", renderPage(1));
   $("#first-img").on("click", renderPage(1));
   $("#previous-img").on("click", renderPage(1));
@@ -82,28 +82,32 @@ return;
 //});
 
 var renderPage = function (event, page) {
-  var pagVal = 0;
-  var currPage = $('#currentpage').html();
-  var lastPage =  $('#totalpages').html();
-  //alert('currPage..'+currPage);
+  var pagVal = page;
+  var currPage = document.getElementById("refCurrentPage").value;
+  var lastPage =  document.getElementById("totalpages").innerHTML;
   if ('first' == event) {
     pagVal = 1;
   } else if('next' == event) {
-      pagVal  = currPage + 1;
+      pagVal  = parseInt(currPage) + 1;
   }else if('prev' == event) {
-    pagVal  = currPage - 1;
+    pagVal  = parseInt(currPage) - 1;
   } else if('last' == event) {
     pagVal = lastPage;
   }
+  console.log('rendering page..'+pagVal);
   $.ajax({
     type: 'GET',
-    url: '/tiff/tt?page='+page+"&random="+Math.random(),
+    url: '/tiff/tt?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
-      console.log("data.."+data)
-      $('#mydiv').html(data.data);
+      console.log("data.."+data.totalPages +"-"+data.currentpage);
+      document.getElementById("mydiv").innerHTML = data.data;
+      document.getElementById("totalpages").innerHTML = data.totalPages;
+      document.getElementById("currentpage").value = data.currentpage;
+      document.getElementById("refCurrentPage").value = data.currentpage;
+    /*  $('#mydiv').html(data.data);
       $('#totalpages').html(data.totalPages);
       $('#currentpage').html(data.currentpage);
-      $("input[id=refCurrentPage]").html(data.currentpage);
+      $("input[id=refCurrentPage]").html(data.currentpage); */
 
     //  $('#refCurrentPage')
     //  alert($('#refCurrentPage').val());
