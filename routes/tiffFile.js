@@ -25,18 +25,6 @@ var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/r
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/MARBLES.TIF";
-
-  const width = 1200
-  const height = 600
-
-  const canvas = createCanvas(width, height)
-  const context = canvas.getContext('2d')
-  const text = 'Hello, World!'
-
-  context.font = 'bold 70pt Menlo'
-  context.textAlign = 'center'
-  context.fillStyle = '#fff'
-  context.fillText(text, 600, 170)
   res.render('index', { title: 'Express', data: "", currentpage: 1, totalPages: 1});
 });
 
@@ -56,38 +44,38 @@ router.get('/tt', function(req, res, next) {
   var url ="https://file-examples-com.github.io/uploads/2017/10/file_example_TIFF_5MB.tiff";
   var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/multiSample.tif";
   var fileUrl = "http://localhost:3000/images/renderImg/multiSample.tif";
-  /*  var result = GeoTIFF.fromUrl(fileUrl)
-  .then(tiff => {
 
-  tiff.getImage().then((image) => {
-  const width = image.getWidth();
-  const height = image.getHeight();
-  const tileWidth = image.getTileWidth();
-  const tileHeight = image.getTileHeight();
-  const samplesPerPixel = image.getSamplesPerPixel();
-  console.log("image.."+image);
-  console.log("width.."+width);
-  console.log("height.."+height);
-  console.log("tileWidth.."+tileWidth);
-  console.log("tileHeight.."+tileHeight);
-  console.log("samplesPerPixel.."+samplesPerPixel);
+// geo tiff
+    var result = GeoTIFF.fromUrl(fileUrl).then(tiff => {
+      tiff.getImageCount().then(count => console.log("tiff.getImageCount().."+count));
+      tiff.getImage(0).then((image) => {
+          const width = image.getWidth();
+          const height = image.getHeight();
+          const tileWidth = image.getTileWidth();
+          const tileHeight = image.getTileHeight();
+          const samplesPerPixel = image.getSamplesPerPixel();
+          console.log("image.."+image);
+          console.log("width.."+width);
+          console.log("height.."+height);
+          console.log("tileWidth.."+tileWidth);
+          console.log("tileHeight.."+tileHeight);
+          console.log("samplesPerPixel.."+samplesPerPixel);
 
-  var data =   image.readRGB().then((data) => {
-  const canvas = createCanvas(width, height)
-  const ctx = canvas.getContext('2d')
-  var imageData = ctx.createImageData(width, height);
-  for (var i = 0; i < data.length; i++)
-  imageData.data[i] = data[i];
-  ctx.putImageData(imageData, 0, 0);
-  //console.log("canvas.toDataURL()>>>.."+canvas.toDataURL());
-  return canvas.toDataURL();
-  //return '<img src="' + canvas.toDataURL() + '" />';
-})
-data.then(value => {
-console.log("value..."+value.length);
-res.send('<img src="' + value + '" />');
+         image.readRGB().then((data) => {
 
-})
+           console.log("rgb data.."+data);
+          const canvas = createCanvas(width, height)
+          const ctx = canvas.getContext('2d')
+          var imageData = ctx.createImageData(width, height);
+          for (var i = 0; i < data.length; i++)
+            imageData.data[i] = data[i];
+            ctx.putImageData(imageData, 0, 0);
+          console.log("canvas.toDataURL()>>>.."+canvas.toDataURL());
+          //return canvas.toDataURL(); */
+        });
+      //return '<img src="' + canvas.toDataURL() + '" />';
+      });
+    });
 
 /*const canvas = createCanvas(width, height)
 const ctx = canvas.getContext('2d')
@@ -105,6 +93,29 @@ console.log("result.."+result); */
 console.log("1");
 var buffer = fs.readFileSync(filename);
 
+// image-js tiffPage
+/*
+<h1>invalid compression: 7</h1>
+<h2></h2>
+<pre>Error: invalid compression: 7
+    at TIFFDecoder.readStripData (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\tiff\lib\tiffDecoder.js:199:27)
+    at TIFFDecoder.decodeImageData (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\tiff\lib\tiffDecoder.js:150:22)
+    at TIFFDecoder.decodeIFD (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\tiff\lib\tiffDecoder.js:99:18)
+    at TIFFDecoder.decode (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\tiff\lib\tiffDecoder.js:53:30)
+    at Object.decodeTIFF [as decode] (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\tiff\lib\index.js:10:20)
+    at C:\Users\jebastin\work\jsfileviewer\jsFileViewer\routes\tiffFile.js:98:22
+    at Layer.handle [as handle_request] (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (C:\Users\jebastin\work\jsfileviewer\jsFileViewer\node_modules\express\lib\router\layer.js:95:5)</pre>
+
+*/
+/*const imgifds = tiff.decode(buffer)
+const imgfirst = imgifds[0];
+const data = imgfirst.data;
+console.log('imgfirst.data..'+data); */
+
+// UTIF
 const ifds = UTIF.decode(buffer);
 const timage = ifds[0];
 var pageCount = ifds.length;
