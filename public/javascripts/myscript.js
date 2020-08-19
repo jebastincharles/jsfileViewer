@@ -1,5 +1,5 @@
 $(document).ready(function(){
- renderPage(null, 1);
+ renderPage(null, 1, false);
 });
 
 var zoomin = function(){
@@ -29,7 +29,7 @@ var zoomout = function(){
   imgOut.style.width = (imgOut.width + 25) + "px";
 }
 
-var renderPage = function (event, page) {
+var renderPage = function (event, page, showThumbnail) {
   var pagVal = page;
   var currPage = document.getElementById("refCurrentPage").value;
   var lastPage =  document.getElementById("totalpages").innerHTML;
@@ -52,6 +52,11 @@ var renderPage = function (event, page) {
       document.getElementById("totalpages").innerHTML = data.totalPages;
       document.getElementById("currentpage").value = data.currentpage;
       document.getElementById("refCurrentPage").value = data.currentpage;
+      if(showThumbnail) {
+        document.getElementById("thumbnaildiv").style.display = 'block';
+      } else {
+        document.getElementById("thumbnaildiv").style.display = 'none';
+      }
     },
     error: function(error) {
       console.log(error)
@@ -80,14 +85,7 @@ var renderThumbNail = function (event, page) {
       var images = data.images;
       var thumbNailDiv = document.getElementById("thumbnaildiv");
       thumbNailDiv.innerHTML = images;
-      for(var i=0; i < images.length; i++) {
-        console.log(images[i])
-      //  thumbNailDiv.innerHTML = images[i];
-        break;
-      }
-
-
-
+      thumbNailDiv.style.display = 'block';
     },
     error: function(error) {
       console.log(error)

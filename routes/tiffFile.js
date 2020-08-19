@@ -32,7 +32,7 @@ router.get('/render', function(req, res, next) {
     totalPages = metadata.pages;
     console.log('metadata..'+metadata.pages);
   });
-  var imageBuff = sharp(filename, {page: parseInt(currpage)-1}).png().toBuffer().then((dataval) => {
+  var imageBuff = sharp(filename, {page: parseInt(currpage)-1}).png().resize(675,600).toBuffer().then((dataval) => {
       var dataImg= "data:image/png;base64,"+dataval.toString('base64');
       var data = '<img id="tiffPage" src="'+dataImg+'" />';
       console.log('img data...',dataImg);
@@ -62,7 +62,7 @@ const getThumbnails = async function(res) {
 
   var images = [];
   for (var i = 1; i <= 5; i++) {
-    images.push(sharp(filename,  {page: i-1, pages: 1}).png().resize(200,200).toBuffer().then((dataval) => {
+    images.push(sharp(filename,  {page: i-1, pages: 1}).png().resize(150,150).toBuffer().then((dataval) => {
         var dataImg= "data:image/png;base64,"+dataval.toString('base64');
         var imgname = "tiffPage_"+i;
         var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';

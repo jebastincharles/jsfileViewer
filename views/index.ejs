@@ -13,10 +13,10 @@
         <input type="hidden" id="refCurrentPage" value=""> </input>
         <input type="hidden" id="imgAngle" name="imgAngle" value="0"> </input>
          <div class="container">
-           <nav class="navbar navbar-inverse navbar-static-top">
+
              <div class="navBar">
                <img src="/images/print.png" alt="print" onclick="print()" />
-               <img src="/images/save.png" alt="save" />
+               <!--<img src="/images/save.png" alt="save" /> -->
                <img src="/images/download.png" alt="download" onclick="download()" />
                <img id="first-img" src="/images/firstpage.jpg" alt="first page" onclick="renderPage('first')" />
                <img id="previous-img" src="/images/previous.png" alt="previous" onclick="renderPage('prev')" />
@@ -31,7 +31,7 @@
                <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(-90)" />
                <img src="/images/thumbnail.jpg" alt="thumbnail" onclick="renderThumbNail(null, 1)" />
              </div>
-           </nav>
+
            <div id="imageContainer">
              <div id="mydiv"></div>
              <div id="thumbnaildiv"></div>
