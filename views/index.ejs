@@ -14,15 +14,15 @@
         <input type="hidden" id="imgAngle" name="imgAngle" value="0"> </input>
          <div class="container">
 
-             <div class="navBar">
+             <div class="navBar1">
                <img src="/images/print.png" alt="print" onclick="print()" />
                <!--<img src="/images/save.png" alt="save" /> -->
                <img src="/images/download.png" alt="download" onclick="download()" />
                <img id="first-img" src="/images/firstpage.jpg" alt="first page" onclick="renderPage('first')" />
                <img id="previous-img" src="/images/previous.png" alt="previous" onclick="renderPage('prev')" />
-               <div><input type="textbox" id="currentpage" maxlength="3" value = "<%= currentpage %>" /></div>
+               <div class="currentpageholder"><input type="textbox" id="currentpage" maxlength="3" value = "<%= currentpage %>" /></div>
                <img id="slash-img" src="/images/slashline.png" alt="slash" />
-               <div><span id="totalpages"><%= totalPages %></span></div>
+               <div class="totalpagesholder"><span id="totalpages"><%= totalPages %></span></div>
                <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage('next')" />
                <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage('last')" />
                <img src="/images/zoom-in.png" alt="zoom-in" onclick="zoomout()" />
@@ -31,6 +31,11 @@
                <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(-90)" />
                <img src="/images/thumbnail.jpg" alt="thumbnail" onclick="renderThumbNail(null, 1)" />
              </div>
+             <div class="navBar2">
+                <img src="/images/fit-to-height.png" alt="fit to height" onclick="fittoheight()" />
+                <img src="/images/fit-to-width.png" alt="fit to width" onclick="fittowidth()" />
+                <img src="/images/fit-to-page.png" alt="fit to page" onclick="fittopage()" />
+            </div>
 
            <div id="imageContainer">
              <div id="mydiv"></div>

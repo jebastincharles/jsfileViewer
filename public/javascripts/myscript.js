@@ -2,9 +2,29 @@ $(document).ready(function(){
  renderPage(null, 1, false);
 });
 
+var fittoheight = function(){
+  var imgOut = document.getElementById('tiffPage');
+  var imgdiv = document.getElementById('mydiv');
+  imgOut.style.height = imgdiv.clientHeight + "px";
+}
+
+var fittowidth = function(){
+  var imgOut = document.getElementById('tiffPage');
+  var imgdiv = document.getElementById('mydiv');
+  imgOut.style.width = imgdiv.clientWidth + "px";
+}
+
+var fittopage = function(){
+  var imgOut = document.getElementById('tiffPage');
+  var imgdiv = document.getElementById('mydiv');
+  imgOut.style.width = imgdiv.clientWidth + "px";
+  imgOut.style.height = imgdiv.clientHeight + "px";
+}
+
 var zoomin = function(){
   var imgOut = document.getElementById('tiffPage');
   imgOut.style.width = (imgOut.width - 25) + "px";
+  imgOut.style.height = (imgOut.height - 25) + "px";
 }
 
 var download = function(){
@@ -27,6 +47,7 @@ var zoomout = function(){
     imgOut.style.overflow = 'scroll';
   }
   imgOut.style.width = (imgOut.width + 25) + "px";
+  imgOut.style.height = (imgOut.height + 25) + "px";
 }
 
 var renderPage = function (event, page, showThumbnail) {

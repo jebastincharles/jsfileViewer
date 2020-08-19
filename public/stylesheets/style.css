@@ -10,12 +10,17 @@ a {
 nav {
   margin-left: 5%
 }
-.navBar img {
+.navBar1 img {
   width: 25px;
   margin: 14px;
 }
-.navBar {
+/*.navBar1 {
   margin-bottom: 20px;
+} */
+
+.navBar2 img {
+ width: 25px;
+ margin: 14px;
 }
 
 #currentpage {
@@ -62,4 +67,7 @@ nav {
 #thumbnaildiv img {
   border: 2px solid #ccc;
   margin: 2px;
+}
+.currentpageholder, .totalpagesholder {
+  display: inline;
 }
