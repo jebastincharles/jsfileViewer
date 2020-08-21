@@ -9,7 +9,6 @@
     "await": "^0.2.6",
     "cookie-parser": "~1.4.4",
     "cropper": "^4.1.0",
-    "cropperjs": "^1.5.7",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
