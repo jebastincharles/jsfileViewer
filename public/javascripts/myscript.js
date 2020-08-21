@@ -2,27 +2,96 @@ $(document).ready(function(){
  renderPage(null, 1, false);
 });
 
+var zoomto100 = function(){
+    var imgOut = document.getElementById('tiffPage');
+    var imgdiv = document.getElementById('mydiv');
+    imgdiv.style.overflow = 'scroll';
+    var scale = 'scale(1.5)';
+    imgOut.style.transform = scale;
+    imgdiv.style.overflow = scroll;
+}
+
+var invertColorImage = function() {
+    if($('#tiffPage').hasClass("invertcss")) {
+        $('#tiffPage').removeClass("invertcss");
+    } else {
+        $('#tiffPage').addClass("invertcss")
+    }
+  //  imgOut.style.filter= invert(1);
+}
+
+var zoomlens = function() {
+  var disable = false;
+    $('#tiffPage').ezPlus({
+        zoomLens: false,
+        zoomType: 'lens',
+        lensShape: 'round',
+        lensSize: 100
+    });
+}
+
+var crop = function() {
+  const image = document.getElementById('tiffPage');
+const cropper = new Cropper(image, {
+  aspectRatio: 4 / 3,
+  crop(event) {
+
+    const cropBoxData = cropper.getCropBoxData();
+    console.log(cropBoxData);
+    console.log(event.detail.x);
+    console.log(event.detail.y);
+    console.log(event.detail.width);
+    console.log(event.detail.height);
+    console.log(event.detail.rotate);
+    console.log(event.detail.scaleX);
+    console.log(event.detail.scaleY);
+    alert(cropBoxData)
+  },
+});
+}
+
+var zoomLens = function(){
+    var imgOut = document.getElementById('tiffPage');
+    var imgdiv = document.getElementById('mydiv');
+    imgdiv.style.overflow = 'scroll';
+    var scale = 'scale(1.5)';
+    imgOut.style.transform = scale;
+    imgdiv.style.overflow = scroll;
+}
+
 var fittoheight = function(){
   var imgOut = document.getElementById('tiffPage');
   var imgdiv = document.getElementById('mydiv');
+  var scale = 'scaleY(1)';
+  imgOut.style.transform = scale;
   imgOut.style.height = imgdiv.clientHeight + "px";
 }
 
 var fittowidth = function(){
   var imgOut = document.getElementById('tiffPage');
   var imgdiv = document.getElementById('mydiv');
+  var scale = 'scaleX(1)';
+  imgOut.style.transform = scale;
   imgOut.style.width = imgdiv.clientWidth + "px";
 }
 
 var fittopage = function(){
   var imgOut = document.getElementById('tiffPage');
   var imgdiv = document.getElementById('mydiv');
+  var scale = 'scale(1,1)';
+  imgOut.style.transform = scale;
   imgOut.style.width = imgdiv.clientWidth + "px";
   imgOut.style.height = imgdiv.clientHeight + "px";
+  imgdiv.style.overflow = 'hidden';
 }
+
+
 
 var zoomin = function(){
   var imgOut = document.getElementById('tiffPage');
+  //var scale = 'scale(0.9)';
+//  alert(imgOut.style.transform)
+//  imgOut.style.transform = scale;
   imgOut.style.width = (imgOut.width - 25) + "px";
   imgOut.style.height = (imgOut.height - 25) + "px";
 }
@@ -116,7 +185,7 @@ var renderThumbNail = function (event, page) {
 
     var drawRotated = function (degrees){
       var imgAngle = (parseInt(document.getElementById('imgAngle').value) + degrees)% 360;
-      document.getElementById('tiffPage').style.transform = "rotate("+imgAngle+"deg)";
+      document.getElementById('tiffPage').style.transform  = "rotate("+imgAngle+"deg)";
       document.getElementById('imgAngle').value = imgAngle;
       return;
     }

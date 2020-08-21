@@ -32,7 +32,7 @@ router.get('/render', function(req, res, next) {
     totalPages = metadata.pages;
     console.log('metadata..'+metadata.pages);
   });
-  var imageBuff = sharp(filename, {page: parseInt(currpage)-1}).png().resize(675,600).toBuffer().then((dataval) => {
+  var imageBuff = sharp(filename, {page: parseInt(currpage)-1}).png().resize(675,550).toBuffer().then((dataval) => {
       var dataImg= "data:image/png;base64,"+dataval.toString('base64');
       var data = '<img id="tiffPage" src="'+dataImg+'" />';
       console.log('img data...',dataImg);

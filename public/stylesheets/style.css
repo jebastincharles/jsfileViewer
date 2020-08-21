@@ -39,6 +39,9 @@ nav {
 #next-img {
   margin-left: 20px;
 }
+.imageContainer {
+    height: 650px;
+}
 .container {
   width: 50% !important;
   height: 700px;
@@ -51,7 +54,7 @@ nav {
 #mydiv {
   width: 79%;
   height: 600px;
-  overflow: hidden;
+  overflow: hidden !important;
   margin:0;
   /*border: 1px solid #ddd; */
   float: left;
@@ -61,7 +64,7 @@ nav {
   /*border: 2px solid #ddd; */
   float: right;
   height: 600px;
-  overflow-y: scroll;
+  /*overflow-y: scroll; */
 }
 
 #thumbnaildiv img {
@@ -70,4 +73,7 @@ nav {
 }
 .currentpageholder, .totalpagesholder {
   display: inline;
+}
+.invertcss {
+  filter: invert(1);
 }
