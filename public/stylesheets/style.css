@@ -77,3 +77,14 @@ nav {
 .invertcss {
   filter: invert(1);
 }
+
+.brightnesscss {
+  filter: brightness(var(--brightness));
+}
+#cropdiv {
+  float: right;
+}
+
+.contrastcss {
+  filter: contrast(var(--contrast));
+}

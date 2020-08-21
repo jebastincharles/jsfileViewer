@@ -1,5 +1,17 @@
 $(document).ready(function(){
  renderPage(null, 1, false);
+ $(document).on("dblclick", ".cropper-container", function(e) {
+    var canvas =  $('#tiffPage').cropper('getCroppedCanvas');;
+    var canvaURL = canvas.toDataURL('image/jpeg');
+    console.log(canvaURL);
+    var image = document.createElement("IMG");
+    image.setAttribute("src", canvaURL);
+    $('#cropdiv').append(image);
+     //$('#cropdiv').html(canvas);
+     $('.cropper-container').hide();
+     $('#tiffPage').removeClass('cropper-hidden')
+  });
+
 });
 
 var zoomto100 = function(){
@@ -17,7 +29,24 @@ var invertColorImage = function() {
     } else {
         $('#tiffPage').addClass("invertcss")
     }
-  //  imgOut.style.filter= invert(1);
+}
+
+var addBrightness = function() {
+    if($('#tiffPage').hasClass("brightnesscss")) {
+        $('#tiffPage').removeClass("brightnesscss");
+    } else {
+        $('#tiffPage').addClass("brightnesscss")
+          $('#tiffPage').css('--brightness', '70%');
+    }
+}
+
+var addContrast = function() {
+    if($('#tiffPage').hasClass("contrastcss")) {
+        $('#tiffPage').removeClass("contrastcss");
+    } else {
+        $('#tiffPage').addClass("contrastcss")
+        $('#tiffPage').css('--contrast', '60%');
+    }
 }
 
 var zoomlens = function() {
@@ -31,23 +60,55 @@ var zoomlens = function() {
 }
 
 var crop = function() {
-  const image = document.getElementById('tiffPage');
-const cropper = new Cropper(image, {
-  aspectRatio: 4 / 3,
-  crop(event) {
+  if($('#tiffPage').hasClass('cropper-hidden') ){
+    $('.cropper-container').hide();
+    $('#tiffPage').removeClass('cropper-hidden')
 
-    const cropBoxData = cropper.getCropBoxData();
-    console.log(cropBoxData);
-    console.log(event.detail.x);
-    console.log(event.detail.y);
-    console.log(event.detail.width);
-    console.log(event.detail.height);
-    console.log(event.detail.rotate);
-    console.log(event.detail.scaleX);
-    console.log(event.detail.scaleY);
-    alert(cropBoxData)
-  },
-});
+      return;
+  } else if($('.cropper-container').length) {
+    $('.cropper-container').show();
+    $('#tiffPage').addClass('cropper-hidden');
+    return;
+  }
+
+  const image = document.getElementById('tiffPage');
+  const cropper = $('#tiffPage').cropper( {
+    modal: true,
+    dragMode: 'crop',
+    aspectRatio: 2 / 1,
+    //autoCropArea: 0.65,
+    restore: false,
+    guides: false,
+    center: false,
+    highlight: false,
+    cropBoxMovable: true,
+    cropBoxResizable: true,
+    toggleDragModeOnDblclick: false,
+    crop(event) {
+
+    //  const cropBoxData = cropper.getCropBoxData();
+console.log(JSON.stringify(event.detail));
+      console.log(event.detail.x);
+      console.log(event.detail.y);
+      console.log(event.detail.width);
+      console.log(event.detail.height);
+      console.log(event.detail.rotate);
+      console.log(event.detail.scaleX);
+      console.log(event.detail.scaleY);
+    //  console.log('url..'+cropper.getCroppedCanvas());
+    //  $('#thumbnaildiv').append(cropper.getCroppedCanvas())  ;
+
+      //alert(cropBoxData)
+      event.preventDefault();
+    },
+  });
+
+
+
+
+const image1 = $('#tiffPage');
+
+
 }
 
 var zoomLens = function(){
