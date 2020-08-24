@@ -88,3 +88,10 @@ nav {
 .contrastcss {
   filter: contrast(var(--contrast));
 }
+.cropper-drag-box {
+  background-color: #fff !important;
+}
+
+.cropper-bg {
+   background-image:none !important;
+}
