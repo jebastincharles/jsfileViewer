@@ -40,7 +40,7 @@ var download = function(){
 
 var print = function(){
   var myWindow=window.open();
-   myWindow.document.write($('#mydiv').html());
+   myWindow.document.write($('#display-image').html());
    myWindow.document.close();
    myWindow.focus();
    myWindow.print();
@@ -113,11 +113,11 @@ var renderPage = function (event, page) {
     url: '/tiff/render?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       console.log("data.."+data.totalPages +"-"+data.currentpage);
-      document.getElementById("mydiv").innerHTML = data.data;
+      document.getElementById("display-image").innerHTML = data.data;
       document.getElementById("totalpages").innerHTML = data.totalPages;
       document.getElementById("currentpage").value = data.currentpage;
       document.getElementById("refCurrentPage").value = data.currentpage;
-    /*  $('#mydiv').html(data.data);
+    /*  $('#display-image').html(data.data);
       $('#totalpages').html(data.totalPages);
       $('#currentpage').html(data.currentpage);
       $("input[id=refCurrentPage]").html(data.currentpage); */

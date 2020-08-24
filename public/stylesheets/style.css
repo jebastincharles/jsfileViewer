@@ -51,7 +51,7 @@ nav {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
-#mydiv {
+#display-image {
   width: 79%;
   height: 600px;
   overflow: hidden !important;
@@ -59,7 +59,7 @@ nav {
   /*border: 1px solid #ddd; */
   float: left;
 }
-#thumbnaildiv {
+#display-thumbnail {
   width: 21%;
   /*border: 2px solid #ddd; */
   float: right;
@@ -67,7 +67,7 @@ nav {
   /*overflow-y: scroll; */
 }
 
-#thumbnaildiv img {
+#display-thumbnail img {
   border: 2px solid #ccc;
   margin: 2px;
 }

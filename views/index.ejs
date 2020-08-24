@@ -20,7 +20,7 @@
         <input type="hidden" id="refCurrentPage" value=""> </input>
         <input type="hidden" id="imgAngle" name="imgAngle" value="0"> </input>
          <div class="container">
-
+           <div class="navigation">
              <div class="navBar1">
                <img src="/images/print.png" alt="print" onclick="print()" />
                <!--<img src="/images/save.png" alt="save" /> -->
@@ -45,18 +45,16 @@
                 <img src="/images/fit-to-page.png" alt="fit to page" onclick="fittopage()" />
                 <img src="/images/zoom-to-100percent.png" alt="zoom to 100 percent" onclick="zoomto100()" />
                 <img src="/images/cropper.jpg" alt="crop image" onclick="crop()" />
+                <!--<img src="/images/zoom-area.png" alt="zoom area" onclick="zoomBand()" />  -->
                 <img src="/images/magnifier.png" alt="zoom lens" onclick="zoomlens()" />
                 <img src="/images/invert.png" alt="zoom lens" onclick="invertColorImage()" />
                 <img src="/images/brightness.png" alt="brightness" onclick="addBrightness()" />
                 <img src="/images/contrast.png" alt="contrast" onclick="addContrast()" />
-
-
-            </div>
-
+             </div>
+          </div>
            <div id="imageContainer">
-             <div id="mydiv"></div>
-             <div id="thumbnaildiv"></div>
-
+             <div id="display-image"></div>
+             <div id="display-thumbnail"></div>
           </div>
          </div>
 

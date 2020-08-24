@@ -16,7 +16,7 @@ $(document).ready(function(){
 
 var zoomto100 = function(){
     var imgOut = document.getElementById('tiffPage');
-    var imgdiv = document.getElementById('mydiv');
+    var imgdiv = document.getElementById('display-image');
     imgdiv.style.overflow = 'scroll';
     var scale = 'scale(1.5)';
     imgOut.style.transform = scale;
@@ -49,6 +49,24 @@ var addContrast = function() {
     }
 }
 
+var zoomBand = function() {
+  /*  let cropperImg = $('#tiffPage').data('cropper');
+    if(cropperImg) {
+       $('#tiffPage').cropper('zoom', 0.1);
+    } */
+
+    $('#tiffPage').ezPlus({
+        responsive: true,
+        zoomLens: false,
+        zoomType: 'window',
+        lensShape: 'square',
+        scrollZoom: true,
+        lensSize: 100,
+        zoomWindowWidth: 500,
+        zoomWindowHeight: 200
+    });
+}
+
 var zoomlens = function() {
   var disable = false;
 
@@ -69,7 +87,7 @@ var zoomlens = function() {
         zoomLens: false,
         zoomType: 'lens',
         lensShape: 'round',
-        lensSize: 100
+        lensSize: 200
     });
 
 
@@ -102,6 +120,13 @@ var crop = function() {
     cropBoxMovable: true,
     cropBoxResizable: true,
     toggleDragModeOnDblclick: false,
+    zoom: function(e) {
+      console.log("zoom..."+JSON.stringify(event.detail));
+            console.log("zoom..."+event.detail.x);
+            console.log("zoom..."+event.detail.y);
+            console.log("zoom..."+event.detail.width);
+            console.log("zoom..."+event.detail.height);
+    },
     crop(event) {
 
     //  const cropBoxData = cropper.getCropBoxData();
@@ -114,7 +139,7 @@ console.log(JSON.stringify(event.detail));
       console.log(event.detail.scaleX);
       console.log(event.detail.scaleY);
     //  console.log('url..'+cropper.getCroppedCanvas());
-    //  $('#thumbnaildiv').append(cropper.getCroppedCanvas())  ;
+    //  $('#display-thumbnail').append(cropper.getCroppedCanvas())  ;
 
       //alert(cropBoxData)
       event.preventDefault();
@@ -131,7 +156,7 @@ const image1 = $('#tiffPage');
 
 var zoomLens = function(){
     var imgOut = document.getElementById('tiffPage');
-    var imgdiv = document.getElementById('mydiv');
+    var imgdiv = document.getElementById('display-image');
     imgdiv.style.overflow = 'scroll';
     var scale = 'scale(1.5)';
     imgOut.style.transform = scale;
@@ -140,7 +165,7 @@ var zoomLens = function(){
 
 var fittoheight = function(){
   var imgOut = document.getElementById('tiffPage');
-  var imgdiv = document.getElementById('mydiv');
+  var imgdiv = document.getElementById('display-image');
   var scale = 'scaleY(1)';
   imgOut.style.transform = scale;
   imgOut.style.height = imgdiv.clientHeight + "px";
@@ -148,7 +173,7 @@ var fittoheight = function(){
 
 var fittowidth = function(){
   var imgOut = document.getElementById('tiffPage');
-  var imgdiv = document.getElementById('mydiv');
+  var imgdiv = document.getElementById('display-image');
   var scale = 'scaleX(1)';
   imgOut.style.transform = scale;
   imgOut.style.width = imgdiv.clientWidth + "px";
@@ -156,7 +181,7 @@ var fittowidth = function(){
 
 var fittopage = function(){
   var imgOut = document.getElementById('tiffPage');
-  var imgdiv = document.getElementById('mydiv');
+  var imgdiv = document.getElementById('display-image');
   var scale = 'scale(1,1)';
   imgOut.style.transform = scale;
   imgOut.style.width = imgdiv.clientWidth + "px";
@@ -181,7 +206,7 @@ var download = function(){
 
 var print = function(){
   var myWindow=window.open();
-   myWindow.document.write($('#mydiv').html());
+   myWindow.document.write($('#display-image').html());
    myWindow.document.close();
    myWindow.focus();
    myWindow.print();
@@ -217,14 +242,14 @@ var renderPage = function (event, page, showThumbnail) {
     url: '/tiff/render?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       console.log("data.."+data.totalPages +"-"+data.currentpage);
-      document.getElementById("mydiv").innerHTML = data.data;
+      document.getElementById("display-image").innerHTML = data.data;
       document.getElementById("totalpages").innerHTML = data.totalPages;
       document.getElementById("currentpage").value = data.currentpage;
       document.getElementById("refCurrentPage").value = data.currentpage;
       if(showThumbnail) {
-        document.getElementById("thumbnaildiv").style.display = 'block';
+        document.getElementById("display-thumbnail").style.display = 'block';
       } else {
-        document.getElementById("thumbnaildiv").style.display = 'none';
+        document.getElementById("display-thumbnail").style.display = 'none';
       }
     },
     error: function(error) {
@@ -252,9 +277,9 @@ var renderThumbNail = function (event, page) {
     url: '/tiff/rendernail?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       var images = data.images;
-      var thumbNailDiv = document.getElementById("thumbnaildiv");
-      thumbNailDiv.innerHTML = images;
-      thumbNailDiv.style.display = 'block';
+      var display_thumbnail = document.getElementById("display-thumbnail");
+      display_thumbnail.innerHTML = images;
+      display_thumbnail.style.display = 'block';
     },
     error: function(error) {
       console.log(error)
