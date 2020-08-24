@@ -51,12 +51,29 @@ var addContrast = function() {
 
 var zoomlens = function() {
   var disable = false;
+
+  if($('.zoomContainer').length) {
+    let action='hide';
+    let plugin = $('#tiffPage').data('ezPlus');
+    alert(plugin)
+    if (plugin) {
+        plugin.showHideZoomContainer(action);
+        plugin.showHideWindow(action);
+        plugin.showHideTint(action);
+        plugin.showHideLens(action);
+        plugin.destroy();
+    }
+    return;
+  }
     $('#tiffPage').ezPlus({
         zoomLens: false,
         zoomType: 'lens',
         lensShape: 'round',
         lensSize: 100
     });
+
+
+
 }
 
 var crop = function() {
