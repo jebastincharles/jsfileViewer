@@ -1,7 +1,7 @@
 $(document).ready(function(){
  renderPage(null, 1, false);
  $(document).on("dblclick", ".cropper-container", function(e) {
-    var canvas =  $('#tiffPage').cropper('getCroppedCanvas');;
+    var canvas =  $('#rdr-image').cropper('getCroppedCanvas');;
     var canvaURL = canvas.toDataURL('image/jpeg');
     console.log(canvaURL);
     var image = document.createElement("IMG");
@@ -9,13 +9,13 @@ $(document).ready(function(){
     $('#cropdiv').append(image);
      //$('#cropdiv').html(canvas);
      $('.cropper-container').hide();
-     $('#tiffPage').removeClass('cropper-hidden')
+     $('#rdr-image').removeClass('cropper-hidden')
   });
 
 });
 
 var zoomto100 = function(){
-    var imgOut = document.getElementById('tiffPage');
+    var imgOut = document.getElementById('rdr-image');
     var imgdiv = document.getElementById('display-image');
     imgdiv.style.overflow = 'scroll';
     var scale = 'scale(1.5)';
@@ -24,38 +24,38 @@ var zoomto100 = function(){
 }
 
 var invertColorImage = function() {
-    if($('#tiffPage').hasClass("invertcss")) {
-        $('#tiffPage').removeClass("invertcss");
+    if($('#rdr-image').hasClass("invertcss")) {
+        $('#rdr-image').removeClass("invertcss");
     } else {
-        $('#tiffPage').addClass("invertcss")
+        $('#rdr-image').addClass("invertcss")
     }
 }
 
 var addBrightness = function() {
-    if($('#tiffPage').hasClass("brightnesscss")) {
-        $('#tiffPage').removeClass("brightnesscss");
+    if($('#rdr-image').hasClass("brightnesscss")) {
+        $('#rdr-image').removeClass("brightnesscss");
     } else {
-        $('#tiffPage').addClass("brightnesscss")
-          $('#tiffPage').css('--brightness', '70%');
+        $('#rdr-image').addClass("brightnesscss")
+          $('#rdr-image').css('--brightness', '70%');
     }
 }
 
 var addContrast = function() {
-    if($('#tiffPage').hasClass("contrastcss")) {
-        $('#tiffPage').removeClass("contrastcss");
+    if($('#rdr-image').hasClass("contrastcss")) {
+        $('#rdr-image').removeClass("contrastcss");
     } else {
-        $('#tiffPage').addClass("contrastcss")
-        $('#tiffPage').css('--contrast', '60%');
+        $('#rdr-image').addClass("contrastcss")
+        $('#rdr-image').css('--contrast', '60%');
     }
 }
 
 var zoomBand = function() {
-  /*  let cropperImg = $('#tiffPage').data('cropper');
+  /*  let cropperImg = $('#rdr-image').data('cropper');
     if(cropperImg) {
-       $('#tiffPage').cropper('zoom', 0.1);
+       $('#rdr-image').cropper('zoom', 0.1);
     } */
 
-    $('#tiffPage').ezPlus({
+    $('#rdr-image').ezPlus({
         responsive: true,
         zoomLens: false,
         zoomType: 'window',
@@ -72,7 +72,7 @@ var zoomlens = function() {
 
   if($('.zoomContainer').length) {
     let action='hide';
-    let plugin = $('#tiffPage').data('ezPlus');
+    let plugin = $('#rdr-image').data('ezPlus');
     alert(plugin)
     if (plugin) {
         plugin.showHideZoomContainer(action);
@@ -83,7 +83,7 @@ var zoomlens = function() {
     }
     return;
   }
-    $('#tiffPage').ezPlus({
+    $('#rdr-image').ezPlus({
         zoomLens: false,
         zoomType: 'lens',
         lensShape: 'round',
@@ -95,19 +95,19 @@ var zoomlens = function() {
 }
 
 var crop = function() {
-  if($('#tiffPage').hasClass('cropper-hidden') ){
+  if($('#rdr-image').hasClass('cropper-hidden') ){
     $('.cropper-container').hide();
-    $('#tiffPage').removeClass('cropper-hidden')
+    $('#rdr-image').removeClass('cropper-hidden')
 
       return;
   } else if($('.cropper-container').length) {
     $('.cropper-container').show();
-    $('#tiffPage').addClass('cropper-hidden');
+    $('#rdr-image').addClass('cropper-hidden');
     return;
   }
 
-  const image = document.getElementById('tiffPage');
-  const cropper = $('#tiffPage').cropper( {
+  const image = document.getElementById('rdr-image');
+  const cropper = $('#rdr-image').cropper( {
     modal: true,
     dragMode: 'crop',
     aspectRatio: 2 / 1,
@@ -149,13 +149,13 @@ console.log(JSON.stringify(event.detail));
 
 
 
-const image1 = $('#tiffPage');
+const image1 = $('#rdr-image');
 
 
 }
 
 var zoomLens = function(){
-    var imgOut = document.getElementById('tiffPage');
+    var imgOut = document.getElementById('rdr-image');
     var imgdiv = document.getElementById('display-image');
     imgdiv.style.overflow = 'scroll';
     var scale = 'scale(1.5)';
@@ -164,7 +164,7 @@ var zoomLens = function(){
 }
 
 var fittoheight = function(){
-  var imgOut = document.getElementById('tiffPage');
+  var imgOut = document.getElementById('rdr-image');
   var imgdiv = document.getElementById('display-image');
   var scale = 'scaleY(1)';
   imgOut.style.transform = scale;
@@ -172,7 +172,7 @@ var fittoheight = function(){
 }
 
 var fittowidth = function(){
-  var imgOut = document.getElementById('tiffPage');
+  var imgOut = document.getElementById('rdr-image');
   var imgdiv = document.getElementById('display-image');
   var scale = 'scaleX(1)';
   imgOut.style.transform = scale;
@@ -180,7 +180,7 @@ var fittowidth = function(){
 }
 
 var fittopage = function(){
-  var imgOut = document.getElementById('tiffPage');
+  var imgOut = document.getElementById('rdr-image');
   var imgdiv = document.getElementById('display-image');
   var scale = 'scale(1,1)';
   imgOut.style.transform = scale;
@@ -192,7 +192,7 @@ var fittopage = function(){
 
 
 var zoomin = function(){
-  var imgOut = document.getElementById('tiffPage');
+  var imgOut = document.getElementById('rdr-image');
   //var scale = 'scale(0.9)';
 //  alert(imgOut.style.transform)
 //  imgOut.style.transform = scale;
@@ -214,7 +214,7 @@ var print = function(){
 }
 
 var zoomout = function(){
-  var imgOut = document.getElementById('tiffPage');
+  var imgOut = document.getElementById('rdr-image');
   var containerWidth = $(".container").width();
   if (containerWidth < (imgOut.width + 25)) {
     imgOut.style.overflow = 'scroll';
@@ -289,7 +289,7 @@ var renderThumbNail = function (event, page) {
 
     var drawRotated = function (degrees){
       var imgAngle = (parseInt(document.getElementById('imgAngle').value) + degrees)% 360;
-      document.getElementById('tiffPage').style.transform  = "rotate("+imgAngle+"deg)";
+      document.getElementById('rdr-image').style.transform  = "rotate("+imgAngle+"deg)";
       document.getElementById('imgAngle').value = imgAngle;
       return;
     }
