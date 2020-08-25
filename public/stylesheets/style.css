@@ -47,7 +47,7 @@ nav {
   height: 700px;
   border: 2px solid #ccc;
   position: absolute;
-  overflow: hidden;
+  /*overflow: hidden;v*/
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
@@ -60,9 +60,9 @@ nav {
 }
 #display-thumbnail {
   width: 21%;
-  /*border: 2px solid #ddd; */
   float: right;
-  /*overflow-y: scroll; */
+  height: 585px;
+  overflow-y: scroll;
 }
 
 #display-thumbnail img {
@@ -97,4 +97,12 @@ nav {
 .navigation {
   border-bottom: 2px solid #ccc;
   height: 15%;
+}
+
+.rt-transform {
+  -moz-transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
+-webkit-transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
+-o-transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
+-ms-transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
+transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
 }

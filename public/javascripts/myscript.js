@@ -3,24 +3,31 @@ $(document).ready(function(){
  $(document).on("dblclick", ".cropper-container", function(e) {
     var canvas =  $('#rdr-image').cropper('getCroppedCanvas');;
     var canvaURL = canvas.toDataURL('image/jpeg');
-    console.log(canvaURL);
     var image = document.createElement("IMG");
     image.setAttribute("src", canvaURL);
     $('#cropdiv').append(image);
-     //$('#cropdiv').html(canvas);
      $('.cropper-container').hide();
      $('#rdr-image').removeClass('cropper-hidden')
   });
-
 });
 
 var zoomto100 = function(){
-    var imgOut = document.getElementById('rdr-image');
-    var imgdiv = document.getElementById('display-image');
-    imgdiv.style.overflow = 'scroll';
+    /*var imgdiv = $('#display-image');
+    var imgOut = $('#rdr-image');
+    imgdiv.css('overflow','scroll');
     var scale = 'scale(1.5)';
-    imgOut.style.transform = scale;
-    imgdiv.style.overflow = scroll;
+    imgOut.css('transform', scale); */
+
+
+    var imgOut = $('#rdr-image');
+    var zoomx = 1.5;
+    var zoomy = 1.5;
+    var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
+    var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+    imgOut.css({transform: value});
+    $('#zoomx').val(zoomx);
+    $('#zoomy').val(zoomy);
+    imgdiv.css('overflow', 'scroll');
 }
 
 var invertColorImage = function() {
@@ -69,11 +76,10 @@ var zoomBand = function() {
 
 var zoomlens = function() {
   var disable = false;
-
   if($('.zoomContainer').length) {
     let action='hide';
     let plugin = $('#rdr-image').data('ezPlus');
-    alert(plugin)
+    //alert(plugin)
     if (plugin) {
         plugin.showHideZoomContainer(action);
         plugin.showHideWindow(action);
@@ -86,19 +92,19 @@ var zoomlens = function() {
     $('#rdr-image').ezPlus({
         zoomLens: false,
         zoomType: 'lens',
-        lensShape: 'round',
-        lensSize: 200
+        lensShape: 'square',
+        lensSize: 100,
+        zoomWindowHeight: 200,
+        zoomWindowWidth: 200,
+        borderSize: 1,
+        easing: true
     });
-
-
-
 }
 
 var crop = function() {
   if($('#rdr-image').hasClass('cropper-hidden') ){
     $('.cropper-container').hide();
     $('#rdr-image').removeClass('cropper-hidden')
-
       return;
   } else if($('.cropper-container').length) {
     $('.cropper-container').show();
@@ -121,83 +127,131 @@ var crop = function() {
     cropBoxResizable: true,
     toggleDragModeOnDblclick: false,
     zoom: function(e) {
-      console.log("zoom..."+JSON.stringify(event.detail));
-            console.log("zoom..."+event.detail.x);
-            console.log("zoom..."+event.detail.y);
-            console.log("zoom..."+event.detail.width);
-            console.log("zoom..."+event.detail.height);
     },
     crop(event) {
-
-    //  const cropBoxData = cropper.getCropBoxData();
-console.log(JSON.stringify(event.detail));
-      console.log(event.detail.x);
-      console.log(event.detail.y);
-      console.log(event.detail.width);
-      console.log(event.detail.height);
-      console.log(event.detail.rotate);
-      console.log(event.detail.scaleX);
-      console.log(event.detail.scaleY);
-    //  console.log('url..'+cropper.getCroppedCanvas());
-    //  $('#display-thumbnail').append(cropper.getCroppedCanvas())  ;
-
-      //alert(cropBoxData)
+      console.log(JSON.stringify(event.detail));
       event.preventDefault();
-    },
+    }
   });
-
-
-
-
-const image1 = $('#rdr-image');
-
-
 }
 
-var zoomLens = function(){
-    var imgOut = document.getElementById('rdr-image');
-    var imgdiv = document.getElementById('display-image');
-    imgdiv.style.overflow = 'scroll';
-    var scale = 'scale(1.5)';
-    imgOut.style.transform = scale;
-    imgdiv.style.overflow = scroll;
-}
 
 var fittoheight = function(){
-  var imgOut = document.getElementById('rdr-image');
-  var imgdiv = document.getElementById('display-image');
-  var scale = 'scaleY(1)';
-  imgOut.style.transform = scale;
-  imgOut.style.height = imgdiv.clientHeight + "px";
+  var imgdiv = $('#display-image');
+/*  var imgOut = $('#rdr-image');
+  var scalex = getCorodinates('rdr-image', 'scaleX');
+  var scale = 'scale('+scalex+',1)';
+  imgOut.css('transform', scale); */
+
+
+  var imgOut = $('#rdr-image');
+  var zoomx = parseFloat($('#zoomx').val());
+  var zoomy = 1;
+  var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
+  var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+  imgOut.css({transform: value});
+  $('#zoomy').val(zoomy);
+  imgOut.height(imgdiv.innerHeight() + "px");
+  imgdiv.css('overflow-y','hidden');
 }
 
 var fittowidth = function(){
-  var imgOut = document.getElementById('rdr-image');
-  var imgdiv = document.getElementById('display-image');
+  var imgdiv = $('#display-image');
+
+/*  var imgOut = $('#rdr-image');
+  var scaley = getCorodinates('rdr-image', 'scaleY');
+  var scale = 'scale(1,'+ scaley+')';
+  imgOut.css('transform', scale); */
+
+
+  var imgOut = $('#rdr-image');
+  var zoomx = 1;
+  var zoomy = parseFloat($('#zoomy').val());
+  var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
+  var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+  imgOut.css({transform: value});
+  $('#zoomx').val(zoomx);
+  imgOut.width(imgdiv.innerWidth() + "px");
+  imgdiv.css('overflow-x','hidden');
+
+/*  var imgOut = $('#rdr-image');
+  var imgdiv = $('#display-image');
   var scale = 'scaleX(1)';
-  imgOut.style.transform = scale;
-  imgOut.style.width = imgdiv.clientWidth + "px";
+  imgOut.css('transform', scale);
+  imgOut.width(imgdiv.innerWidth() + "px"); */
 }
 
 var fittopage = function(){
-  var imgOut = document.getElementById('rdr-image');
-  var imgdiv = document.getElementById('display-image');
+  var imgdiv = $('#display-image');
+
+
+  /*var imgOut = $('#rdr-image');
+
   var scale = 'scale(1,1)';
-  imgOut.style.transform = scale;
-  imgOut.style.width = imgdiv.clientWidth + "px";
-  imgOut.style.height = imgdiv.clientHeight + "px";
-  imgdiv.style.overflow = 'hidden';
+  imgOut.css('transform', scale); */
+
+  var imgOut = $('#rdr-image');
+  var zoomx = 1;
+  var zoomy = 1;
+  var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
+  var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+  imgOut.css({transform: value});
+  $('#zoomx').val(zoomx);
+  $('#zoomy').val(zoomy);
+
+  imgOut.width(imgdiv.innerWidth() + "px");
+  imgOut.height(imgdiv.innerHeight() + "px");
+  imgdiv.css('overflow','hidden');
 }
 
-
-
 var zoomin = function(){
-  var imgOut = document.getElementById('rdr-image');
-  //var scale = 'scale(0.9)';
-//  alert(imgOut.style.transform)
-//  imgOut.style.transform = scale;
-  imgOut.style.width = (imgOut.width - 25) + "px";
-  imgOut.style.height = (imgOut.height - 25) + "px";
+  /*var imgOut = $('#rdr-image');
+  var scalex = getCorodinates('rdr-image', 'scaleX');
+  var scaley = getCorodinates('rdr-image', 'scaleY');
+  var scalexNewVal = scalex > 0 ? scalex-0.1 :  0;
+  var scaleyNewVal = scaley > 0 ? scaley-0.1 :  0;
+  var scale = 'scale('+scalexNewVal+','+ scaleyNewVal+')';
+  imgOut.css('transform', scale); */
+
+  var imgOut = $('#rdr-image');
+  var zoomx = parseFloat($('#zoomx').val())-.1;
+  var zoomy = parseFloat($('#zoomy').val())-.1;
+  var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
+  var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+  imgOut.css({transform: value});
+  $('#zoomx').val(zoomx);
+  $('#zoomy').val(zoomy);
+
+
+}
+
+var getCorodinates = function(elementName, coordinateName) {
+
+  var imgOut = $('#'+elementName);
+  var matrix = imgOut.css('transform');
+  //alert('translate_val..'+(matrix == 'none'));
+  if (matrix == 'none') {
+    if (coordinateName == 'scaleX') return 1;
+    if (coordinateName == 'skewY') return 0;
+    if (coordinateName == 'skewX') return 0;
+    if (coordinateName == 'scaleY') return 1;
+    if (coordinateName == 'translateX') return 0;
+    if (coordinateName == 'translateY') return 0;
+
+  }
+  var translate_val = matrix.match(/-?[\d\.]+/g);
+  //alert('translate_val..'+translate_val)
+  var matrixVal = translate_val.toString().split(',');
+  if (matrixVal.length >= 6 ) {
+    if (coordinateName == 'scaleX') return matrixVal[0];
+    if (coordinateName == 'skewY') return matrixVal[1];
+    if (coordinateName == 'skewX') return matrixVal[2];
+    if (coordinateName == 'scaleY') return matrixVal[3];
+    if (coordinateName == 'translateX') return matrixVal[4];
+    if (coordinateName == 'translateY') return matrixVal[5];
+  }
+  return '';
+
 }
 
 var download = function(){
@@ -214,19 +268,23 @@ var print = function(){
 }
 
 var zoomout = function(){
-  var imgOut = document.getElementById('rdr-image');
-  var containerWidth = $(".container").width();
-  if (containerWidth < (imgOut.width + 25)) {
-    imgOut.style.overflow = 'scroll';
-  }
-  imgOut.style.width = (imgOut.width + 25) + "px";
-  imgOut.style.height = (imgOut.height + 25) + "px";
+  var imgOut = $('#rdr-image');
+  var zoomx = parseFloat($('#zoomx').val())+.1;
+  var zoomy = parseFloat($('#zoomy').val())+.1;
+  var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
+  //imgOut.addClass('rt-transform');
+//  transform: scaleX(1.5) scaleY(1.5) rotate(0deg);
+  var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+  //alert(value)
+  imgOut.css({transform: value});
+  $('#zoomx').val(zoomx);
+  $('#zoomy').val(zoomy);
 }
 
 var renderPage = function (event, page, showThumbnail) {
   var pagVal = page;
-  var currPage = document.getElementById("refCurrentPage").value;
-  var lastPage =  document.getElementById("totalpages").innerHTML;
+  var currPage = $("#refCurrentPage").val();
+  var lastPage =  $("#totalpages").html();
   if ('first' == event) {
     pagVal = 1;
   } else if('next' == event) {
@@ -242,14 +300,14 @@ var renderPage = function (event, page, showThumbnail) {
     url: '/tiff/render?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       console.log("data.."+data.totalPages +"-"+data.currentpage);
-      document.getElementById("display-image").innerHTML = data.data;
-      document.getElementById("totalpages").innerHTML = data.totalPages;
-      document.getElementById("currentpage").value = data.currentpage;
-      document.getElementById("refCurrentPage").value = data.currentpage;
+      $("#display-image").html(data.data);
+      $("#totalpages").html(data.totalPages);
+      $("#currentpage").val(data.currentpage);
+      $("#refCurrentPage").val(data.currentpage);
       if(showThumbnail) {
-        document.getElementById("display-thumbnail").style.display = 'block';
+        $("#display-thumbnail").show();
       } else {
-        document.getElementById("display-thumbnail").style.display = 'none';
+        $("display-thumbnail").hide();
       }
     },
     error: function(error) {
@@ -259,9 +317,14 @@ var renderPage = function (event, page, showThumbnail) {
 };
 
 var renderThumbNail = function (event, page) {
+  var display_thumbnail = $("#display-thumbnail");
+  if(display_thumbnail.is(":visible")) {
+    display_thumbnail.hide();
+    return;
+  }
   var pagVal = page;
-  var currPage = document.getElementById("refCurrentPage").value;
-  var lastPage =  document.getElementById("totalpages").innerHTML;
+  var currPage = $("#refCurrentPage").val();
+  var lastPage =  $("#totalpages").html();
   if ('first' == event) {
     pagVal = 1;
   } else if('next' == event) {
@@ -277,9 +340,9 @@ var renderThumbNail = function (event, page) {
     url: '/tiff/rendernail?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       var images = data.images;
-      var display_thumbnail = document.getElementById("display-thumbnail");
-      display_thumbnail.innerHTML = images;
-      display_thumbnail.style.display = 'block';
+      var display_thumbnail = $("#display-thumbnail");
+      display_thumbnail.html(images);
+      display_thumbnail.show();
     },
     error: function(error) {
       console.log(error)
@@ -288,8 +351,19 @@ var renderThumbNail = function (event, page) {
 };
 
     var drawRotated = function (degrees){
-      var imgAngle = (parseInt(document.getElementById('imgAngle').value) + degrees)% 360;
-      document.getElementById('rdr-image').style.transform  = "rotate("+imgAngle+"deg)";
-      document.getElementById('imgAngle').value = imgAngle;
-      return;
+
+      /*var scalex = getCorodinates('rdr-image', 'scaleX');
+      var scaley = getCorodinates('rdr-image', 'scaleY');
+      var scale = 'scale('+scalex+','+ scaley+')';
+      var imgAngle = (parseInt($('#imgAngle').val()) + degrees)% 360;
+      $('#rdr-image').css('transform', 'rotate('+imgAngle+'deg)');
+      $('#imgAngle').val(imgAngle);*/
+
+      var imgOut = $('#rdr-image');
+      var zoomx = parseFloat($('#zoomx').val());
+      var zoomy = parseFloat($('#zoomy').val());
+      var imgAngle = (parseInt($('#imgAngle').val()) + degrees)% 360;
+      var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+      imgOut.css({transform: value});
+      $('#imgAngle').val(imgAngle);
     }
