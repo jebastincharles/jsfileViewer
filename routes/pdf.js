@@ -5,7 +5,6 @@ const sharp = require('sharp');
 var Canvas = require("canvas");
 const Promise = require('promise');
 const await = require('await');
-const PDFKit = require('pdfkit');
 const pdfjsLib = require('pdfjs-dist/es5/build/pdf.js');
 const URL = require('url');
 var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/sample2.pdf";
