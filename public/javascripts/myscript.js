@@ -297,7 +297,42 @@ var renderPage = function (event, page, showThumbnail) {
   console.log('rendering page..'+pagVal);
   $.ajax({
     type: 'GET',
-    url: '/tiff/render?page='+pagVal+"&random="+Math.random(),
+    url: '/pdf/render?page='+pagVal+"&random="+Math.random(),
+    success: function(data) {
+      console.log("data.."+data.totalPages +"-"+data.currentpage);
+      $("#display-image").html(data.data);
+      $("#totalpages").html(data.totalPages);
+      $("#currentpage").val(data.currentpage);
+      $("#refCurrentPage").val(data.currentpage);
+      if(showThumbnail) {
+        $("#display-thumbnail").show();
+      } else {
+        $("display-thumbnail").hide();
+      }
+    },
+    error: function(error) {
+      console.log(error)
+    }
+  });
+};
+
+var renderPage1 = function (event, page, showThumbnail) {
+  var pagVal = page;
+  var currPage = $("#refCurrentPage").val();
+  var lastPage =  $("#totalpages").html();
+  if ('first' == event) {
+    pagVal = 1;
+  } else if('next' == event) {
+      pagVal  = parseInt(currPage) + 1;
+  }else if('prev' == event) {
+    pagVal  = parseInt(currPage) - 1;
+  } else if('last' == event) {
+    pagVal = lastPage;
+  }
+  console.log('rendering page..'+pagVal);
+  $.ajax({
+    type: 'GET',
+    url: '/pdf/render?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       console.log("data.."+data.totalPages +"-"+data.currentpage);
       $("#display-image").html(data.data);
@@ -337,7 +372,7 @@ var renderThumbNail = function (event, page) {
   console.log('rendering page..'+pagVal);
   $.ajax({
     type: 'GET',
-    url: '/tiff/rendernail?page='+pagVal+"&random="+Math.random(),
+    url: '/jpeg/rendernail?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       var images = data.images;
       var display_thumbnail = $("#display-thumbnail");

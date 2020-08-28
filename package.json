@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "await": "^0.2.6",
+    "canvas": "^2.6.1",
     "cookie-parser": "~1.4.4",
     "cropper": "^4.1.0",
     "debug": "~2.6.9",
@@ -15,12 +16,17 @@
     "ez-plus": "^1.2.1",
     "highlight.js": "^10.1.2",
     "http-errors": "~1.6.3",
+    "jimp": "^0.16.0",
     "jquery": "^3.5.1",
     "jquery-cropper": "^1.0.1",
     "morgan": "^1.10.0",
     "pango": "0.0.3",
+    "pdf2pic": "^1.4.0",
+    "pdfjs-dist": "^2.4.456",
+    "pdfkit": "^0.11.0",
     "promise": "^8.1.0",
     "sharp": "^0.25.4",
+    "url": "^0.11.0",
     "zoomlens": "^1.0.1"
   }
 }

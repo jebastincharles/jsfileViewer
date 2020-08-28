@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const fs = require('fs');
 const sharp = require('sharp');
+
+const fs = require('fs');
+
 const Promise = require('promise');
 const await = require('await');
 var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/multiSample.tif";
