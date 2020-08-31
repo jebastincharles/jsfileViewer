@@ -90,15 +90,20 @@ const getPage = async function(filename, currpage,res) {
      var renderTask = page.render(renderContext);
     try {
       renderTask.promise.then(function () {
+        /*var dataImg= canvasAndContext.canvas.toDataURL('image/png');
+        var imgname = "rdr-image";
+        var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
+        res.send({ title: 'Express', data: data, currentpage: currpage, totalPages: totalPages});
+        */
         const uri = canvasAndContext.canvas.toDataURL('image/png').split(';base64,').pop()
         var buff =  Buffer.from(uri, 'base64');
-        sharp(buff).png().resize(675, 575).toBuffer(function(err, dataval)  {
+        sharp(buff).resize(675, 575, {fit: sharp.fit.fill}).withMetadata().toBuffer(function(err, dataval)  {
           console.error(err)
           var dataImg= "data:image/png;base64,"+dataval.toString('base64');
           var imgname = "rdr-image";
           var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
           res.send({ title: 'Express', data: data, currentpage: currpage, totalPages: totalPages});
-         })
+        })
     });
   } catch(rxp) {
     console.log('in ')
@@ -114,26 +119,72 @@ router.get('/rendernail', function(req, res, next) {
   var totalPages = 0;
   if (!currpage) currpage = 1;
 
-  const thumbnails = getThumbnails(res);
+  const thumbnails = getThumbnails(filename, currpage, res);
   //console.log('img data...',thumbnails);
 
 });
 
-const getThumbnails = async function(res) {
-
+const getThumbnails = async function(filename, currpage,res) {
 
   var images = [];
-  for (var i = 1; i <= 5; i++) {
-    images.push(sharp(filename,  {page: i-1, pages: 1}).png().resize(150,150).toBuffer().then((dataval) => {
-        var dataImg= "data:image/png;base64,"+dataval.toString('base64');
-        var imgname = "rdr-image_"+i;
-        var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
-        return data;
+  var totalPages = 0;
+  console.log('filename..',filename);
+  console.log('currpage..',currpage);
 
-      }));
+  const loadingTask = pdfjsLib.getDocument(filename);
+  const pdf = await loadingTask.promise;
+  var images = [];
+      totalPages = pdf.numPages;
+      var img;
+    for (var i = 1; i <= 5; i++) {
+      img =  getThumbnailPage(pdf, i);
+      //console.log('img..'+typeof(img));
+      images.push(img);
+    }
 
-  }
-  const finalImages = await Promise.all(images).then((values => res.send({ images: values})));
+    const finalImages = await Promise.all(images).then(values =>{
+        //console.log('in sending'+values);
+        res.send({ images: values});
+        //return values;
+
+     });
+}
+
+const getThumbnailPage = async function(pdfval, currpage) {
+
+
+    var canvasFactory = new NodeCanvasFactory();
+    const page = await pdfval.getPage(parseInt(currpage));
+    const viewport = page.getViewport({scale: 1});
+    var canvasAndContext = canvasFactory.create(
+        viewport.width,
+        viewport.height
+    );
+    var renderContext = {
+         canvasContext: canvasAndContext.context,
+         viewport: viewport,
+         canvasFactory: canvasFactory,
+    };
+    var renderTask =  page.render(renderContext).promise ;
+    //return  renderTask.promise.then(function () {
+    var buff;
+    return renderTask.then(task => {
+      const uri = canvasAndContext.canvas.toDataURL('image/png').split(';base64,').pop()
+       return Buffer.from(uri, 'base64');
+
+    }).then(buff => {
+          return sharp(buff).resize(150, 150, {fit: sharp.fit.fill,
+                                              withoutEnlargement: true}).withMetadata().toBuffer()
+      }). then(dataval  =>  {
+                var dataImg= "data:image/png;base64,"+dataval.toString('base64');
+                var imgname = "rdr-image_"+currpage;
+                var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
+                console.log("|data rendered")
+                return data;
+                  //res.send({ title: 'Express', data: data, currentpage: currpage, totalPages: totalPages});
+      });
+
 
 }
+
 module.exports = router;

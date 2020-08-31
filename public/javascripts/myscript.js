@@ -9,6 +9,11 @@ $(document).ready(function(){
      $('.cropper-container').hide();
      $('#rdr-image').removeClass('cropper-hidden')
   });
+  $(document).on("click", "img[id^=rdr-image_]", function(e) {
+    var id = $(this).attr('id');
+    var matches = id.match(/\d+/g);
+    renderPage(null,matches[0], true);
+  });
 });
 
 var zoomto100 = function(){
@@ -369,10 +374,10 @@ var renderThumbNail = function (event, page) {
   } else if('last' == event) {
     pagVal = lastPage;
   }
-  console.log('rendering page..'+pagVal);
+  console.log('rendering thumbanil..'+pagVal);
   $.ajax({
     type: 'GET',
-    url: '/jpeg/rendernail?page='+pagVal+"&random="+Math.random(),
+    url: '/pdf/rendernail?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       var images = data.images;
       var display_thumbnail = $("#display-thumbnail");

@@ -32,7 +32,8 @@ router.get('/render', function(req, res, next) {
     totalPages = metadata.pages;
     console.log('metadata..'+metadata.pages);
   });
-  var imageBuff = sharp(filename, {page: parseInt(currpage)-1}).jpeg().resize(675,585).toBuffer().then((dataval) => {
+  var imageBuff = sharp(filename, {page: parseInt(currpage)-1}).jpeg().resize(675,585,{fit: sharp.fit.fill,
+                                withoutEnlargement: true}).toBuffer().then((dataval) => {
       var dataImg= "data:image/jpeg;base64,"+dataval.toString('base64');
       var data = '<img id="rdr-image" src="'+dataImg+'" />';
       //console.log('img data...',dataImg);
@@ -57,7 +58,8 @@ const getThumbnails = async function(res) {
 
   var images = [];
   for (var i = 1; i <= 5; i++) {
-    images.push(sharp(filename,  {page: i-1, pages: 1}).jpeg().resize(150,150).toBuffer().then((dataval) => {
+    images.push(sharp(filename,  {page: i-1, pages: 1}).jpeg().resize(150,150,{fit: sharp.fit.fill,
+                                  withoutEnlargement: true}).toBuffer().then((dataval) => {
         var dataImg= "data:image/jpeg;base64,"+dataval.toString('base64');
         var imgname = "rdr-image_"+i;
         var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
