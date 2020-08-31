@@ -58,32 +58,12 @@ router.get('/render', function(req, res, next) {
 
   if (!currpage) currpage = 1;
 
-getPage(filename, currpage, res);
+  getPage(filename, currpage, res);
 
-
-  //let urlval = URL(filename);
-  //let pdfDocument = PDFDocument(urlval);
-  //console.log("pdfDocument..."+pdfDocument);
-
-/*  var url ="https://file-examples-com.github.io/uploads/2017/10/file_example_TIFF_5MB.tiff";
-  var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/multiSample.tif";
-  var fileUrl = "http://localhost:3000/images/renderImg/multiSample.tif"; */
-
-  /*sharp(url).metadata().then(function(metadata){
-    totalPages = metadata.pages;
-    console.log('metadata..'+metadata.pages);
-  });
-  var imageBuff = sharp(filename, {page: parseInt(currpage)-1}).png().resize(675,585).toBuffer().then((dataval) => {
-      var dataImg= "data:image/png;base64,"+dataval.toString('base64');
-      var data = '<img id="rdr-image" src="'+dataImg+'" />';
-      //console.log('img data...',dataImg);
-      res.send({ title: 'Express', data: data, currentpage: currpage, totalPages: totalPages});
-    }); */
 });
 
 const getPage = async function(filename, currpage,res) {
 
-console.log('currpage...'+typeof currpage)
   var images = [];
   var totalPages = 0;
 
@@ -101,83 +81,29 @@ console.log('currpage...'+typeof currpage)
        viewport.width,
        viewport.height
      );
-  //const canvas = new createCanvas(viewport.width, viewport.height)
-console.log('in 2')
-    // var context = canvas.getContext('2d');
-console.log('in 3')
-
      // Render PDF page into canvas context
      var renderContext = {
         canvasContext: canvasAndContext.context,
         viewport: viewport,
         canvasFactory: canvasFactory,
       };
-     console.log('in 4')
      var renderTask = page.render(renderContext);
-     console.log('in 5')
     try {
       renderTask.promise.then(function () {
-        console.log('in 8');
-
-        var data = '<img id="rdr-image" src="'+canvasAndContext.canvas.toDataURL('image/png')+'" />';
-        console.log('in 6'+data);
-        console.log('Page rendered');
-        res.send({ title: 'Express', data: data, currentpage: currpage, totalPages: totalPages});
-
+        const uri = canvasAndContext.canvas.toDataURL('image/png').split(';base64,').pop()
+        var buff =  Buffer.from(uri, 'base64');
+        sharp(buff).png().resize(675, 575).toBuffer(function(err, dataval)  {
+          console.error(err)
+          var dataImg= "data:image/png;base64,"+dataval.toString('base64');
+          var imgname = "rdr-image";
+          var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
+          res.send({ title: 'Express', data: data, currentpage: currpage, totalPages: totalPages});
+         })
     });
   } catch(rxp) {
     console.log('in ')
     console.err(rxp);
   }
-
-
-
-
-
-
-  //res.setHeader('Content-Type', 'application/pdf');
-  //res.send(canvas);
-
-    // await  page.render(renderContext);
-
-
-
-  /*  var loadingTask = pdfjsLib.getDocument(filename);
-  images.push(loadingTask.promise.then(function(pdf) {
-      totalPages = pdf.numPages;
-       pdf.getPage(1).then(function(page) {
-        var viewport = page.getViewport({scale: 1});
-
-console.log('in 1')
-        const canvas = new createCanvas(viewport.width, viewport.height, 'pdf')
-console.log('in 2')
-           var context = canvas.getContext('2d');
-console.log('in 3')
-
-           // Render PDF page into canvas context
-           var renderContext = {
-             canvasContext: context,
-             viewport: viewport
-           };
-           console.log('in 4')
-           await  page.render(renderContext);
-           console.log('in 5')
-           /*renderTask.promise.then(function () {
-             console.log('in 6')
-             console.log('data url...'+canvas.toDataURL())
-             console.log('in 7')
-             return canvas.toDataURL();
-           });*/
-
-
-
-
-  /*    });
-
-
-  }));
-
-  const finalImages = await Promise.all(images).then(page => console.log(page));*/
 
 }
 
