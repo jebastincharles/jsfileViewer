@@ -51,14 +51,14 @@ NodeCanvasFactory.prototype = {
   },
 };
 
-router.get('/render', function(req, res, next) {
-  var currpage = req.query.page;
-  var url = req.query.url ?  req.query.url : filename;
+router.post('/render', function(req, res, next) {
+  var currpage = req.body.page;
+  var url = req.body.filename ?  req.body.filename : filename;
   var totalPages = 0;
 
   if (!currpage) currpage = 1;
 
-  getPage(filename, currpage, res);
+  getPage(url, currpage, res);
 
 });
 
@@ -112,31 +112,35 @@ const getPage = async function(filename, currpage,res) {
 
 }
 
-router.get('/rendernail', function(req, res, next) {
-  var currpage = req.query.page ? parseInt(req.query.page) : 1;
-  var url = req.query.url ?  req.query.url : filename;
+router.post('/rendernail', function(req, res, next) {
 
-  var totalPages = 0;
-  if (!currpage) currpage = 1;
 
-  const thumbnails = getThumbnails(filename, currpage, res);
+  const thumbnails = getThumbnails(req, res);
   //console.log('img data...',thumbnails);
 
 });
 
-const getThumbnails = async function(filename, currpage,res) {
+const getThumbnails = async function(req, res) {
 
+  var currpage = !!req.body.page ? parseInt(req.body.page) : 1;
+  var url = req.body.url ?  req.body.url : filename;
+  var totalPages = !!req.body.totalpages ? parseInt(req.body.totalpages) : 0;
+
+  if (!currpage) currpage = 1;
+  var lastPage = currpage+4 > totalPages ? totalPages : currpage+4;
   var images = [];
-  var totalPages = 0;
-  console.log('filename..',filename);
-  console.log('currpage..',currpage);
 
-  const loadingTask = pdfjsLib.getDocument(filename);
+
+  console.log('currpage..'+currpage)
+  console.log('totalPages..'+totalPages)
+  console.log('lastPage..'+lastPage)
+
+  const loadingTask = pdfjsLib.getDocument(url);
   const pdf = await loadingTask.promise;
   var images = [];
       totalPages = pdf.numPages;
       var img;
-    for (var i = 1; i <= 5; i++) {
+    for (var i = currpage; i <= lastPage; i++) {
       img =  getThumbnailPage(pdf, i);
       //console.log('img..'+typeof(img));
       images.push(img);

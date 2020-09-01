@@ -287,7 +287,7 @@ var zoomout = function(){
 }
 
 var renderPage = function (filename, event, page, showThumbnail) {
-  var file = filename ? filename : $('#filename').val();
+  var file = !!filename ? filename : $('#filename').val();
   var pagVal = page;
   var currPage = $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
@@ -301,27 +301,63 @@ var renderPage = function (filename, event, page, showThumbnail) {
     pagVal = lastPage;
   }
   console.log('rendering page..'+pagVal);
-  $.ajax({
-    type: 'GET',
-    url: '/'+findServicePath(file)+'/render?page='+pagVal+"&random="+Math.random(),
-    success: function(data) {
-      console.log("data.."+data.totalPages +"-"+data.currentpage);
+  var data = {
+    page: pagVal,
+    filename: file
+  };
+  var url= '/'+findServicePath(file)+'/render?page='+pagVal+"&random="+Math.random()
+  $.post(url, data, function(data) {
+      //console.log("data.."+data.totalPages +"-"+data.currentpage);
       $("#display-image").html(data.data);
       $("#totalpages").html(data.totalPages);
       $("#currentpage").val(data.currentpage);
       $("#refCurrentPage").val(data.currentpage);
-      $("#filename").val(data.filename);
+    //  $("#filename").val(data.filename);
       if(showThumbnail) {
         $("#display-thumbnail").show();
       } else {
         $("display-thumbnail").hide();
       }
-    },
-    error: function(error) {
-      console.log(error)
-    }
   });
 };
+var uploadFile =  function() {
+let photo = document.getElementById("fileLoad").files[0];
+let req = new XMLHttpRequest();
+let formData = new FormData();
+
+formData.append("photo", photo);
+req.open("POST", '/upload/image');
+req.send(formData);
+req.onreadystatechange = function() {
+    if (req.readyState === 4) {
+      var data = JSON.parse(req.response);
+    //  console.log("data.."+JSON.stringify(data));
+        console.log("data.filename.."+JSON.stringify(data.filename));
+        $("#filename").val(data.filename);
+        $("#display-thumbnail").css('display', 'none');
+      renderPage(data.filename, null, 1, false);
+      //callback(xhr.response);
+    }
+  }
+
+
+/*$.ajax({
+  type: 'POST',
+  data: formData,
+  url: '/upload/image?&random='+Math.random(),
+  success: function(data) {
+    console.log("data.."+data.filename);
+    renderPage(data.filename, null, 1, false);
+
+  },
+  error: function(error) {
+    console.log(error)
+  }
+}); */
+//console.log('event.target.files[0]..'+event.target.files[0])
+ //var tmppath = URL.createObjectURL(event.target.files[0]);
+ //alert(tmppath)
+}
 
 var findServicePath = function(filename) {
   var ext = filename.split('.').pop().toLowerCase();
@@ -330,6 +366,7 @@ var findServicePath = function(filename) {
     switch(ext) {
         //if .jpg/.gif/.png do something
         case 'jpg':
+        case 'jpeg':
             path = "jpeg";
             break;
         case 'gif':
@@ -349,7 +386,7 @@ var findServicePath = function(filename) {
 }
 
 var renderThumbNail = function (filename, event, page) {
-  var file = filename ? filename : $('#filename').val();
+  var file = !!filename ? filename : $('#filename').val();
   var display_thumbnail = $("#display-thumbnail");
   if(display_thumbnail.is(":visible")) {
     display_thumbnail.hide();
@@ -358,28 +395,18 @@ var renderThumbNail = function (filename, event, page) {
   var pagVal = page;
   var currPage = $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
-  if ('first' == event) {
-    pagVal = 1;
-  } else if('next' == event) {
-      pagVal  = parseInt(currPage) + 1;
-  }else if('prev' == event) {
-    pagVal  = parseInt(currPage) - 1;
-  } else if('last' == event) {
-    pagVal = lastPage;
-  }
   console.log('rendering thumbanil..'+pagVal);
-  $.ajax({
-    type: 'GET',
-    url: '/'+findServicePath(file)+'/rendernail?page='+pagVal+"&random="+Math.random(),
-    success: function(data) {
+  var   url= '/'+findServicePath(file)+'/rendernail?random='+Math.random();
+  var data= {
+    page: currPage,
+    url: file,
+    totalpages: lastPage
+  };
+  $.post(url, data,function(data) {
       var images = data.images;
       var display_thumbnail = $("#display-thumbnail");
       display_thumbnail.html(images);
       display_thumbnail.show();
-    },
-    error: function(error) {
-      console.log(error)
-    }
   });
 };
 
