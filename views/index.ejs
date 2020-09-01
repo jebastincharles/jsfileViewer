@@ -21,25 +21,26 @@
         <input type="hidden" id="imgAngle" name="imgAngle" value="0"> </input>
         <input type="hidden" id="zoomx" name="zoomx" value="1"> </input>
         <input type="hidden" id="zoomy" name="zoomx" value="1"> </input>
+        <input type="hidden" id="filename" name="filename" value="<%= filename %>"> </input>
          <div class="container">
            <div class="navigation">
              <div class="navBar1">
                <img src="/images/print.png" alt="print" onclick="print()" />
                <!--<img src="/images/save.png" alt="save" /> -->
                <img src="/images/download.png" alt="download" onclick="download()" />
-               <img id="first-img" src="/images/firstpage.jpg" alt="first page" onclick="renderPage('first')" />
-               <img id="previous-img" src="/images/previous.png" alt="previous" onclick="renderPage('prev')" />
+               <img id="first-img" src="/images/firstpage.jpg" alt="first page" onclick="renderPage(null,'first')" />
+               <img id="previous-img" src="/images/previous.png" alt="previous" onclick="renderPage(null,'prev')" />
                <div class="currentpageholder"><input type="textbox" id="currentpage" maxlength="3" value = "<%= currentpage %>" /></div>
                <img id="slash-img" src="/images/slashline.png" alt="slash" />
                <div class="totalpagesholder"><span id="totalpages"><%= totalPages %></span></div>
-               <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage('next')" />
-               <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage('last')" />
+               <img id="next-img" src="/images/next.png" alt="next" onclick="renderPage(null,'next')" />
+               <img id="last-img" src="/images/lastpage.png" alt="last page" onclick="renderPage(null,'last')" />
                <img src="/images/zoom-in.png" alt="zoom-in" onclick="zoomout()" />
                <img src="/images/zoom-out.jpg" alt="zoom-out" onclick="zoomin()" />
                <img src="/images/clockwise.png" alt="clockwise" onclick="drawRotated(90)" />
                <img src="/images/counter-clockwise.png" alt="counter-clockwise" onclick="drawRotated(-90)" />
                <img src="/images/rotate-180.png" alt="rotate 180 degree" onclick="drawRotated(180)" />
-               <img src="/images/thumbnail.jpg" alt="thumbnail" onclick="renderThumbNail(null, 1)" />
+               <img src="/images/thumbnail.jpg" alt="thumbnail" onclick="renderThumbNail(null,null, 1)" />
              </div>
              <div class="navBar2">
                 <img src="/images/fit-to-height.png" alt="fit to height" onclick="fittoheight()" />
@@ -56,7 +57,7 @@
           </div>
            <div class="imageContainer">
              <div id="display-image"></div>
-             <div id="display-thumbnail"></div>
+             <div id="display-thumbnail" class="hidethumbnail"></div>
           </div>
          </div>
 

@@ -1,5 +1,5 @@
 $(document).ready(function(){
- renderPage(null, 1, false);
+ renderPage($('#filename').val(),null, 1, false);
  $(document).on("dblclick", ".cropper-container", function(e) {
     var canvas =  $('#rdr-image').cropper('getCroppedCanvas');;
     var canvaURL = canvas.toDataURL('image/jpeg');
@@ -73,7 +73,7 @@ var zoomBand = function() {
         zoomType: 'window',
         lensShape: 'square',
         scrollZoom: true,
-        lensSize: 100,
+        lensSize: 200,
         zoomWindowWidth: 500,
         zoomWindowHeight: 200
     });
@@ -286,7 +286,8 @@ var zoomout = function(){
   $('#zoomy').val(zoomy);
 }
 
-var renderPage = function (event, page, showThumbnail) {
+var renderPage = function (filename, event, page, showThumbnail) {
+  var file = filename ? filename : $('#filename').val();
   var pagVal = page;
   var currPage = $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
@@ -302,13 +303,14 @@ var renderPage = function (event, page, showThumbnail) {
   console.log('rendering page..'+pagVal);
   $.ajax({
     type: 'GET',
-    url: '/pdf/render?page='+pagVal+"&random="+Math.random(),
+    url: '/'+findServicePath(file)+'/render?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       console.log("data.."+data.totalPages +"-"+data.currentpage);
       $("#display-image").html(data.data);
       $("#totalpages").html(data.totalPages);
       $("#currentpage").val(data.currentpage);
       $("#refCurrentPage").val(data.currentpage);
+      $("#filename").val(data.filename);
       if(showThumbnail) {
         $("#display-thumbnail").show();
       } else {
@@ -321,42 +323,33 @@ var renderPage = function (event, page, showThumbnail) {
   });
 };
 
-var renderPage1 = function (event, page, showThumbnail) {
-  var pagVal = page;
-  var currPage = $("#refCurrentPage").val();
-  var lastPage =  $("#totalpages").html();
-  if ('first' == event) {
-    pagVal = 1;
-  } else if('next' == event) {
-      pagVal  = parseInt(currPage) + 1;
-  }else if('prev' == event) {
-    pagVal  = parseInt(currPage) - 1;
-  } else if('last' == event) {
-    pagVal = lastPage;
-  }
-  console.log('rendering page..'+pagVal);
-  $.ajax({
-    type: 'GET',
-    url: '/pdf/render?page='+pagVal+"&random="+Math.random(),
-    success: function(data) {
-      console.log("data.."+data.totalPages +"-"+data.currentpage);
-      $("#display-image").html(data.data);
-      $("#totalpages").html(data.totalPages);
-      $("#currentpage").val(data.currentpage);
-      $("#refCurrentPage").val(data.currentpage);
-      if(showThumbnail) {
-        $("#display-thumbnail").show();
-      } else {
-        $("display-thumbnail").hide();
-      }
-    },
-    error: function(error) {
-      console.log(error)
+var findServicePath = function(filename) {
+  var ext = filename.split('.').pop().toLowerCase();
+  //alert(ext)
+  var path;
+    switch(ext) {
+        //if .jpg/.gif/.png do something
+        case 'jpg':
+            path = "jpeg";
+            break;
+        case 'gif':
+        case 'png':
+            path = "png";
+            break;
+        case 'tiff':
+        case 'tif':
+            path = "tiff";
+            break;
+        case 'pdf':
+            path = "pdf";
+            break;
     }
-  });
-};
+    //alert(path)
+  return path;
+}
 
-var renderThumbNail = function (event, page) {
+var renderThumbNail = function (filename, event, page) {
+  var file = filename ? filename : $('#filename').val();
   var display_thumbnail = $("#display-thumbnail");
   if(display_thumbnail.is(":visible")) {
     display_thumbnail.hide();
@@ -377,7 +370,7 @@ var renderThumbNail = function (event, page) {
   console.log('rendering thumbanil..'+pagVal);
   $.ajax({
     type: 'GET',
-    url: '/pdf/rendernail?page='+pagVal+"&random="+Math.random(),
+    url: '/'+findServicePath(file)+'/rendernail?page='+pagVal+"&random="+Math.random(),
     success: function(data) {
       var images = data.images;
       var display_thumbnail = $("#display-thumbnail");

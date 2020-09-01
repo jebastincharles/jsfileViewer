@@ -8,7 +8,7 @@ var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/r
 const thumbNailCount = 5;
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express', data: "", currentpage: 1, totalPages: 1});
+  res.render('index', { title: 'Express', filename:filename, data: "", currentpage: 1, totalPages: 1});
 });
 
 router.get('/download', function(req, res, next) {
@@ -37,7 +37,7 @@ router.get('/render', function(req, res, next) {
       var dataImg= "data:image/jpeg;base64,"+dataval.toString('base64');
       var data = '<img id="rdr-image" src="'+dataImg+'" />';
       //console.log('img data...',dataImg);
-      res.send({ title: 'Express', data: data, currentpage: currpage, totalPages: totalPages});
+      res.send({ title: 'Express', filename:filename, data: data, currentpage: currpage, totalPages: totalPages});
     });
 });
 

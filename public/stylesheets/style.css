@@ -106,3 +106,7 @@ nav {
 -ms-transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
 transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
 }
+
+.hidethumbnail {
+  display: none;
+}
