@@ -14,6 +14,12 @@ $(document).ready(function(){
     var matches = id.match(/\d+/g);
     renderPage(null,matches[0], true);
   });
+var x =0;
+  $(document).on("scroll", "div[id^=display-thumbnail]", function(e) {
+    alert(x++);
+  });
+
+
 });
 
 var zoomto100 = function(){
@@ -224,6 +230,14 @@ var zoomin = function(){
   var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
   var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
   imgOut.css({transform: value});
+  if (zoomx != 1 || zoomy != 1) {
+    if(imgAngle == 0) {
+      imgOut.css({'transform-origin': 'top left'});
+    } else  {
+      //imgOut.css({'transform-origin': 'top left'});
+      imgOut.css({'transform-origin': '50% 50%'});
+    }
+  }
   $('#zoomx').val(zoomx);
   $('#zoomy').val(zoomy);
 
@@ -283,6 +297,14 @@ var zoomout = function(){
   var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
   //alert(value)
   imgOut.css({transform: value});
+  if (zoomx != 1 || zoomy != 1) {
+    if(imgAngle == 0) {
+      imgOut.css({'transform-origin': 'top left'});
+    } else  {
+      //imgOut.css({'transform-origin': 'top left'});
+      imgOut.css({'transform-origin': '50% 50%'});
+    }
+  }
   $('#zoomx').val(zoomx);
   $('#zoomy').val(zoomy);
 }
@@ -425,6 +447,18 @@ var renderThumbNail = function (filename, event, page) {
       var zoomy = parseFloat($('#zoomy').val());
       var imgAngle = (parseInt($('#imgAngle').val()) + degrees)% 360;
       var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
+      imgOut.css({'transform-origin': ''});
+      //var value = "rotate("+imgAngle+"deg)";
+      //imgOut.css({'transform-origin': ''});
       imgOut.css({transform: value});
+      if (zoomx != 1 || zoomy != 1) {
+        if(imgAngle == 0) {
+          imgOut.css({'transform-origin': 'top left'});
+        } else  {
+          //imgOut.css({'transform-origin': 'top left'});
+          imgOut.css({'transform-origin': '50% 50%'});
+        }
+    }
+      //imgOut.css({'transform-origin': 'center'});
       $('#imgAngle').val(imgAngle);
     }

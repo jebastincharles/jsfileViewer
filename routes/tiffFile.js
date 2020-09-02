@@ -70,6 +70,7 @@ const getThumbnails = async function(req, res) {
                                   withoutEnlargement: true}).toBuffer().then((dataval) => {
         var dataImg= "data:image/png;base64,"+dataval.toString('base64');
         var imgname = "rdr-image_"+i;
+        console.log('imgname..'+imgname);
         var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
         return data;
 

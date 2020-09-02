@@ -46,17 +46,20 @@ nav {
   width: 50% !important;
   height: 700px;
   border: 2px solid #ccc;
-  position: absolute;
+/*  position: absolute; */
   /*overflow: hidden;v*/
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
 #display-image {
   width: 79%;
-  overflow: hidden !important;
+  height: 100%;
+  /*overflow: hidden !important; */
   margin:0;
   /*border: 1px solid #ddd; */
   float: left;
+  overflow: auto;
+  vertical-align: middle;
 }
 #display-thumbnail {
   width: 21%;
