@@ -110,3 +110,7 @@ transform: scaleX(var(--scalex)) scaleY(var(--scaley)) rotate(var(--degree)deg);
 .hidethumbnail {
   display: none;
 }
+.uploadImage {
+    width: 40px !important;
+    margin-top: 2px !important;
+}

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const fs = require('fs');
+const path = require('path');
 const sharp = require('sharp');
 var Canvas = require("canvas");
 const Promise = require('promise');
@@ -15,9 +16,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/download', function(req, res, next) {
-  res.header('Content-Disposition', 'attachment; filename="sample.pdf"');
+  var file = !!req.query.file ? req.query.file : filename;
+  var name = path.basename(file);
+  res.header('Content-Disposition', 'attachment; filename='+name);
   res.setHeader('Content-Type', 'application/pdf');
-  var stream = fs.readFileSync(filename);
+  var stream = fs.readFileSync(file);
   res.send(stream);
 });
 

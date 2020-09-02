@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const fs = require('fs');
+const path = require('path');
 const sharp = require('sharp');
 const Promise = require('promise');
 const await = require('await');
@@ -13,9 +14,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/download', function(req, res, next) {
-  res.header('Content-Disposition', 'attachment; filename="sample.png"');
+  var file = !!req.query.file ? req.query.file : filename;
+  var name = path.basename(file);
+  res.header('Content-Disposition', 'attachment; filename='+name);
   res.setHeader('Content-Type', 'image/png');
-  var stream = fs.readFileSync(filename);
+  var stream = fs.readFileSync(file);
   res.send(stream);
 });
 router.post('/render', function(req, res, next) {

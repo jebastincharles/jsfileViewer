@@ -260,7 +260,8 @@ var getCorodinates = function(elementName, coordinateName) {
 }
 
 var download = function(){
-  window.location="/tiff/download";
+  var filename = $('#filename').val();
+  window.location="/tiff/download?file="+filename;
 }
 
 var print = function(){
