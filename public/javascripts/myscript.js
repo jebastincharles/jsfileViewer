@@ -6,29 +6,26 @@ $(document).ready(function(){
     var image = document.createElement("IMG");
     image.setAttribute("src", canvaURL);
     $('#cropdiv').append(image);
-     $('.cropper-container').hide();
-     $('#rdr-image').removeClass('cropper-hidden')
+    $('#rdr-image').cropper('destroy');
   });
   $(document).on("click", "img[id^=rdr-image_]", function(e) {
     var id = $(this).attr('id');
     var matches = id.match(/\d+/g);
     renderPage(null,matches[0], true);
   });
-var x =0;
-  $(document).on("scroll", "div[id^=display-thumbnail]", function(e) {
-    alert(x++);
-  });
-
+  $('body').bind('DOMNodeInserted' , function(event) {
+    if(event.target && $(event.target).attr('class') == 'zoomLens'){
+      var zoomx = parseFloat($('#zoomx').val());
+      var zoomy = parseFloat($('#zoomy').val());
+      var imgAngle = (parseInt($('#imgAngle').val()) );
+      var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)"
+      $('.zoomLens').css('transform', value);
+     }
+   });
 
 });
 
 var zoomto100 = function(){
-    /*var imgdiv = $('#display-image');
-    var imgOut = $('#rdr-image');
-    imgdiv.css('overflow','scroll');
-    var scale = 'scale(1.5)';
-    imgOut.css('transform', scale); */
-
 
     var imgOut = $('#rdr-image');
     var zoomx = 1.5;
@@ -67,61 +64,52 @@ var addContrast = function() {
     }
 }
 
-var zoomBand = function() {
-  /*  let cropperImg = $('#rdr-image').data('cropper');
-    if(cropperImg) {
-       $('#rdr-image').cropper('zoom', 0.1);
-    } */
 
-    $('#rdr-image').ezPlus({
-        responsive: true,
-        zoomLens: false,
-        zoomType: 'window',
-        lensShape: 'square',
+
+/*$.fn.myElevateZoom = function () {
+  $('.zoomContainer').remove();
+ $(this).elevateZoom({
+
+           zoomType: "lens",
+        lensShape: "round",
+        containLensZoom: true,
         scrollZoom: true,
         lensSize: 200,
-        zoomWindowWidth: 500,
-        zoomWindowHeight: 200
-    });
-}
+        easing: true
+       });
+
+
+}; */
 
 var zoomlens = function() {
-  var disable = false;
-  if($('.zoomContainer').length) {
-    let action='hide';
-    let plugin = $('#rdr-image').data('ezPlus');
-    //alert(plugin)
-    if (plugin) {
-        plugin.showHideZoomContainer(action);
-        plugin.showHideWindow(action);
-        plugin.showHideTint(action);
-        plugin.showHideLens(action);
-        plugin.destroy();
-    }
+  if ($('.zoomContainer').length > 0) {
+    $('.zoomContainer').remove();
     return;
   }
-    $('#rdr-image').ezPlus({
-        zoomLens: false,
-        zoomType: 'lens',
-        lensShape: 'square',
-        lensSize: 100,
-        zoomWindowHeight: 200,
-        zoomWindowWidth: 200,
-        borderSize: 1,
-        easing: true
-    });
+
+  $('#rdr-image').elevateZoom({
+          zoomType: "lens",
+         lensShape: "round",
+         containLensZoom: true,
+         scrollZoom: true,
+         lensSize: 200,
+         easing: true
+        });
+
+
+
+
 }
 
 var crop = function() {
   if($('#rdr-image').hasClass('cropper-hidden') ){
-    $('.cropper-container').hide();
-    $('#rdr-image').removeClass('cropper-hidden')
+    $('#rdr-image').cropper('destroy');
       return;
-  } else if($('.cropper-container').length) {
+  } /*else if($('.cropper-container').length) {
     $('.cropper-container').show();
     $('#rdr-image').addClass('cropper-hidden');
     return;
-  }
+  } */
 
   const image = document.getElementById('rdr-image');
   const cropper = $('#rdr-image').cropper( {
@@ -130,10 +118,13 @@ var crop = function() {
     aspectRatio: 2 / 1,
     format:"png",
     //autoCropArea: 0.65,
-    restore: false,
+    restore: true,
     guides: false,
     center: false,
     highlight: true,
+    rotatable:true,
+    background: false,
+    scalable : true,
     cropBoxMovable: true,
     cropBoxResizable: true,
     toggleDragModeOnDblclick: false,
@@ -142,6 +133,12 @@ var crop = function() {
     crop(event) {
       console.log(JSON.stringify(event.detail));
       event.preventDefault();
+    },
+    ready: function() {
+      var zoomx = parseFloat($('#zoomx').val());
+      var zoomy = parseFloat($('#zoomy').val());
+      var imgAngle = (parseInt($('#imgAngle').val()) );
+       this.cropper.scale(zoomx, zoomy).rotate(360);
     }
   });
 }
@@ -149,12 +146,6 @@ var crop = function() {
 
 var fittoheight = function(){
   var imgdiv = $('#display-image');
-/*  var imgOut = $('#rdr-image');
-  var scalex = getCorodinates('rdr-image', 'scaleX');
-  var scale = 'scale('+scalex+',1)';
-  imgOut.css('transform', scale); */
-
-
   var imgOut = $('#rdr-image');
   var zoomx = parseFloat($('#zoomx').val());
   var zoomy = 1;
@@ -168,13 +159,6 @@ var fittoheight = function(){
 
 var fittowidth = function(){
   var imgdiv = $('#display-image');
-
-/*  var imgOut = $('#rdr-image');
-  var scaley = getCorodinates('rdr-image', 'scaleY');
-  var scale = 'scale(1,'+ scaley+')';
-  imgOut.css('transform', scale); */
-
-
   var imgOut = $('#rdr-image');
   var zoomx = 1;
   var zoomy = parseFloat($('#zoomy').val());
@@ -185,21 +169,10 @@ var fittowidth = function(){
   imgOut.width(imgdiv.innerWidth() + "px");
   imgdiv.css('overflow-x','hidden');
 
-/*  var imgOut = $('#rdr-image');
-  var imgdiv = $('#display-image');
-  var scale = 'scaleX(1)';
-  imgOut.css('transform', scale);
-  imgOut.width(imgdiv.innerWidth() + "px"); */
 }
 
 var fittopage = function(){
   var imgdiv = $('#display-image');
-
-
-  /*var imgOut = $('#rdr-image');
-
-  var scale = 'scale(1,1)';
-  imgOut.css('transform', scale); */
 
   var imgOut = $('#rdr-image');
   var zoomx = 1;
@@ -216,13 +189,6 @@ var fittopage = function(){
 }
 
 var zoomin = function(){
-  /*var imgOut = $('#rdr-image');
-  var scalex = getCorodinates('rdr-image', 'scaleX');
-  var scaley = getCorodinates('rdr-image', 'scaleY');
-  var scalexNewVal = scalex > 0 ? scalex-0.1 :  0;
-  var scaleyNewVal = scaley > 0 ? scaley-0.1 :  0;
-  var scale = 'scale('+scalexNewVal+','+ scaleyNewVal+')';
-  imgOut.css('transform', scale); */
 
   var imgOut = $('#rdr-image');
   var zoomx = parseFloat($('#zoomx').val())-.1;
@@ -244,9 +210,9 @@ var zoomin = function(){
 
 }
 
-var getCorodinates = function(elementName, coordinateName) {
+var getCorodinates = function(object, coordinateName) {
 
-  var imgOut = $('#'+elementName);
+  var imgOut = object;
   var matrix = imgOut.css('transform');
   //alert('translate_val..'+(matrix == 'none'));
   if (matrix == 'none') {
@@ -259,8 +225,10 @@ var getCorodinates = function(elementName, coordinateName) {
 
   }
   var translate_val = matrix.match(/-?[\d\.]+/g);
+//  alert(matrix)
   //alert('translate_val..'+translate_val)
   var matrixVal = translate_val.toString().split(',');
+  //alert(matrixVal)
   if (matrixVal.length >= 6 ) {
     if (coordinateName == 'scaleX') return matrixVal[0];
     if (coordinateName == 'skewY') return matrixVal[1];
