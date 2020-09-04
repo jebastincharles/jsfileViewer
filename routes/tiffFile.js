@@ -3,7 +3,7 @@ var router = express.Router();
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
-
+//var Promise = require("bluebird");
 const Promise = require('promise');
 const await = require('await');
 var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/multiSample.tif";
@@ -25,13 +25,7 @@ router.post('/render', function(req, res, next) {
   var currpage = req.body.page;
   var url = req.body.filename ?  req.body.filename : filename;
   var totalPages = 0;
-
   if (!currpage) currpage = 1;
-
-/*  var url ="https://file-examples-com.github.io/uploads/2017/10/file_example_TIFF_5MB.tiff";
-  var filename = "C:/Users/jebastin/work/jsfileviewer/jsFileViewer/public/images/renderImg/multiSample.tif";
-  var fileUrl = "http://localhost:3000/images/renderImg/multiSample.tif"; */
-
   sharp(url).metadata().then(function(metadata){
     totalPages = !!metadata.pages ? metadata.pages : 1;
     console.log('metadata..'+metadata.pages);
@@ -40,44 +34,36 @@ router.post('/render', function(req, res, next) {
                                 withoutEnlargement: true}).toBuffer().then((dataval) => {
       var dataImg= "data:image/png;base64,"+dataval.toString('base64');
       var data = '<img id="rdr-image" src="'+dataImg+'" />';
-      //console.log('img data...',dataImg);
       res.send({ title: 'Express', filename:filename, data: data, currentpage: currpage, totalPages: totalPages});
     });
 });
 
 router.post('/rendernail', function(req, res, next) {
 
-
-  const thumbnails = getThumbnails(req, res);
-  //console.log('img data...',thumbnails);
-
+  getThumbnails(req, res);
 });
+
+const renderPageThumbnail = function(url, index) {
+  return sharp(url,  {page: index-1, pages: 1}).png().resize(150,150,{fit: sharp.fit.fill,
+                                withoutEnlargement: true}).toBuffer().then((dataval) => {
+      var dataImg= "data:image/png;base64,"+dataval.toString('base64');
+      var imgname = "rdr-image_"+index;
+      var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
+      return data;
+    })
+}
 
 const getThumbnails = async function(req, res) {
 
   var currpage = !!req.body.page ? parseInt(req.body.page) : 1;
   var url = !!req.body.url ?  req.body.url : filename;
-
   var totalPages = !!req.body.totalpages ? parseInt(req.body.totalpages) : 0;
   if (!currpage) currpage = 1;
-
-
   var images = [];
   var lastPage = currpage+4 > totalPages ? totalPages : currpage+4;
-
   for (var i = currpage; i <= lastPage; i++) {
-    images.push(sharp(url,  {page: i-1, pages: 1}).png().resize(150,150,{fit: sharp.fit.fill,
-                                  withoutEnlargement: true}).toBuffer().then((dataval) => {
-        var dataImg= "data:image/png;base64,"+dataval.toString('base64');
-        var imgname = "rdr-image_"+i;
-        console.log('imgname..'+imgname);
-        var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
-        return data;
-
-      }));
-
+    images.push(renderPageThumbnail(url, i));
   }
   const finalImages = await Promise.all(images).then((values => res.send({ images: values})));
-
 }
 module.exports = router;

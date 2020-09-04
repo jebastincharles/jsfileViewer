@@ -11,7 +11,7 @@ $(document).ready(function(){
   $(document).on("click", "img[id^=rdr-image_]", function(e) {
     var id = $(this).attr('id');
     var matches = id.match(/\d+/g);
-    renderPage(null,matches[0], true);
+    renderPage(null,null,matches[0], true);
   });
   $('body').bind('DOMNodeInserted' , function(event) {
     if(event.target && $(event.target).attr('class') == 'zoomLens'){
