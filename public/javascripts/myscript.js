@@ -13,6 +13,34 @@ $(document).ready(function(){
     var matches = id.match(/\d+/g);
     renderPage(null,null,matches[0], true);
   });
+
+  $('#display-thumbnail').scroll(function() {
+    var display_thumbnail = $("#display-thumbnail");
+    if(display_thumbnail.is(":visible")) {
+    //  display_thumbnail.hide();
+    }
+    var obj = document.getElementById('display-thumbnail');
+    console.log(obj.scrollHeight)
+    console.log(obj.scrollTop)
+    console.log(obj.clientHeight)
+    console.log('......')
+    var rdrPage = 1;
+    if (obj.clientHeight + obj.scrollTop >=  obj.scrollHeight)
+    {
+      var idOf = $( "div[id^=display-thumbnail] img:last-child" ).attr('id');
+      rdrPage = idOf.match(/\d+/g)[0];
+      var lastPage =  $("#totalpages").html();
+      if (rdrPage == lastPage) {
+        console.log('reached last');
+        return;
+      }
+      renderThumbNailOnScroll(null,null, rdrPage);
+    }// else if (obj.scrollTop == 0) {
+    //  var idOf = $( "div[id^=display-thumbnail] img:first-child" ).attr('id');
+      //rdrPage = idOf.match(/\d+/g)[0];
+    //}
+
+  });
   $('body').bind('DOMNodeInserted' , function(event) {
     if(event.target && $(event.target).attr('class') == 'zoomLens'){
       var zoomx = parseFloat($('#zoomx').val());
@@ -332,22 +360,7 @@ req.onreadystatechange = function() {
   }
 
 
-/*$.ajax({
-  type: 'POST',
-  data: formData,
-  url: '/upload/image?&random='+Math.random(),
-  success: function(data) {
-    console.log("data.."+data.filename);
-    renderPage(data.filename, null, 1, false);
 
-  },
-  error: function(error) {
-    console.log(error)
-  }
-}); */
-//console.log('event.target.files[0]..'+event.target.files[0])
- //var tmppath = URL.createObjectURL(event.target.files[0]);
- //alert(tmppath)
 }
 
 var findServicePath = function(filename) {
@@ -384,7 +397,7 @@ var renderThumbNail = function (filename, event, page) {
     return;
   }
   var pagVal = page;
-  var currPage = $("#refCurrentPage").val();
+  var currPage = !!page ? page : $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
   console.log('rendering thumbanil..'+pagVal);
   var   url= '/'+findServicePath(file)+'/rendernail?random='+Math.random();
@@ -397,6 +410,30 @@ var renderThumbNail = function (filename, event, page) {
       var images = data.images;
       var display_thumbnail = $("#display-thumbnail");
       display_thumbnail.html(images);
+      display_thumbnail.show();
+  });
+};
+
+
+var renderThumbNailOnScroll = function (filename, event, page) {
+  var file = !!filename ? filename : $('#filename').val();
+
+  var pagVal = page;
+  var currPage = !!page ? page : $("#refCurrentPage").val();
+  var lastPage =  $("#totalpages").html();
+  console.log('rendering thumbanil..'+currPage);
+  
+  var   url= '/'+findServicePath(file)+'/rendernail?random='+Math.random();
+  var data= {
+    page: currPage,
+    url: file,
+    totalpages: lastPage
+  };
+  $.post(url, data,function(data) {
+      var images = data.images;
+      var display_thumbnail = $("#display-thumbnail");
+       $( "div[id^=display-thumbnail] img:last-child" ).remove();
+      display_thumbnail.append(images);
       display_thumbnail.show();
   });
 };
