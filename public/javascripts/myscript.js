@@ -13,6 +13,14 @@ $(document).ready(function(){
     var matches = id.match(/\d+/g);
     renderPage(null,null,matches[0], true);
   });
+  $(document).on("keypress", "input[id^=currentpage]", function(e) {
+    if (event.keyCode == 13 || event.which == 13){
+          var currPage = $("#currentpage").val();
+           renderPage($('#filename').val(),null, currPage, false);
+    }
+  });
+
+
 
   $('#display-thumbnail').scroll(function() {
     var display_thumbnail = $("#display-thumbnail");
@@ -422,7 +430,7 @@ var renderThumbNailOnScroll = function (filename, event, page) {
   var currPage = !!page ? page : $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
   console.log('rendering thumbanil..'+currPage);
-  
+
   var   url= '/'+findServicePath(file)+'/rendernail?random='+Math.random();
   var data= {
     page: currPage,
