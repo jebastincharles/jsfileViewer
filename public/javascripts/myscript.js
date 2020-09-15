@@ -64,6 +64,7 @@ $(document).ready(function(){
 var zoomto100 = function(){
 
     var imgOut = $('#rdr-image');
+    var imgdiv = $('#display-image');
     var zoomx = 1.5;
     var zoomy = 1.5;
     var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
@@ -227,6 +228,8 @@ var fittopage = function(){
 var zoomin = function(){
 
   var imgOut = $('#rdr-image');
+  var imgdiv = $('#display-image');
+
   var zoomx = parseFloat($('#zoomx').val())-.1;
   var zoomy = parseFloat($('#zoomy').val())-.1;
   var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
@@ -242,7 +245,7 @@ var zoomin = function(){
   }
   $('#zoomx').val(zoomx);
   $('#zoomy').val(zoomy);
-
+  imgdiv.css('overflow', 'scroll');
 
 }
 
@@ -293,6 +296,7 @@ var print = function(){
 
 var zoomout = function(){
   var imgOut = $('#rdr-image');
+  var imgdiv = $('#display-image');
   var zoomx = parseFloat($('#zoomx').val())+.1;
   var zoomy = parseFloat($('#zoomy').val())+.1;
   var imgAngle = (parseInt($('#imgAngle').val()) )% 360;
@@ -311,6 +315,7 @@ var zoomout = function(){
   }
   $('#zoomx').val(zoomx);
   $('#zoomy').val(zoomy);
+  imgdiv.css('overflow', 'scroll');
 }
 
 var renderPage = function (filename, event, page, showThumbnail) {
