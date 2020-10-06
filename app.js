@@ -11,6 +11,7 @@ var jpegRouter = require('./routes/jpeg');
 var pngRouter = require('./routes/png');
 var pdfRouter = require('./routes/pdf');
 var uploadRouter = require('./routes/upload');
+//var docxRouter = require('./routes/docx');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use('/jpeg', jpegRouter);
 app.use('/png', pngRouter);
 app.use('/pdf', pdfRouter);
 app.use('/upload', uploadRouter);
+//app.use('/docx', docxRouter);
 
 
 // catch 404 and forward to error handler

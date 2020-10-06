@@ -11,6 +11,8 @@
     "cookie-parser": "~1.4.4",
     "cropper": "^4.1.0",
     "debug": "~2.6.9",
+    "docx-parser": "^0.2.1",
+    "docx4js": "^3.2.8",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "ez-plus": "^1.2.1",
@@ -26,7 +28,9 @@
     "pdfjs-dist": "^2.4.456",
     "promise": "^8.1.0",
     "sharp": "^0.25.4",
+    "sheetjs": "^2.0.0",
     "url": "^0.11.0",
+    "xlsx": "^0.16.7",
     "zoomlens": "^1.0.1"
   }
 }

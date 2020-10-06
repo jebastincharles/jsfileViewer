@@ -1,5 +1,8 @@
 $(document).ready(function(){
- renderPage($('#filename').val(),null, 1, false);
+ //renderPage($('#filename').val(),null, 1, false);
+ renderPage("C:\\Users\\jebastin\\Desktop\\files\\multiSample.tif",null, 1, false);
+
+
  $(document).on("dblclick", ".cropper-container", function(e) {
     var canvas =  $('#rdr-image').cropper('getCroppedCanvas');;
     var canvaURL = canvas.toDataURL('image/jpeg');
@@ -35,13 +38,14 @@ $(document).ready(function(){
     var rdrPage = 1;
     if (obj.clientHeight + obj.scrollTop >=  obj.scrollHeight)
     {
-      var idOf = $( "div[id^=display-thumbnail] img:last-child" ).attr('id');
+      var idOf = $( "div[id^=display-thumbnail] img:last-child").attr('id');
       rdrPage = idOf.match(/\d+/g)[0];
       var lastPage =  $("#totalpages").html();
       if (rdrPage == lastPage) {
         console.log('reached last');
         return;
       }
+
       renderThumbNailOnScroll(null,null, rdrPage);
     }// else if (obj.scrollTop == 0) {
     //  var idOf = $( "div[id^=display-thumbnail] img:first-child" ).attr('id');
@@ -337,28 +341,48 @@ var renderPage = function (filename, event, page, showThumbnail) {
     page: pagVal,
     filename: file
   };
-  var url= '/'+findServicePath(file)+'/render?page='+pagVal+"&random="+Math.random()
-  $.post(url, data, function(data) {
+  var url= findServicePath(file)+'?page='+pagVal+"&random="+Math.random()
+
+  $.ajax({
+    url: url,
+    type: "POST",
+    beforeSend: function(request) {
+      request.setRequestHeader("content-type", 'application/json');
+    },
+    data: JSON.stringify(data),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function(data) {
       //console.log("data.."+data.totalPages +"-"+data.currentpage);
-      $("#display-image").html(data.data);
-      $("#totalpages").html(data.totalPages);
-      $("#currentpage").val(data.currentpage);
-      $("#refCurrentPage").val(data.currentpage);
+      //"data:image/png;base64,"+decodeBase64(resdata.data.substring(1))
+      dataval = "data:image/png;base64,"+data.data.substring(2, data.data.length-1);
+      var imaageCreated = '<img id="rdr-image" src="'+dataval+'" />';
+      $("#display-image").html(imaageCreated);
+      $("#totalpages").html(data.total_pages);
+      $("#currentpage").val(data.page);
+      $("#refCurrentPage").val(data.page);
     //  $("#filename").val(data.filename);
       if(showThumbnail) {
         $("#display-thumbnail").show();
       } else {
         $("display-thumbnail").hide();
       }
-  });
-};
+  }
+});
+}
+ const  decodeBase64 = function(data) {
+   return data.toString('base64')
+  // return atob(data)
+  //return Buffer.from(data, "base64").toString("base64");
+
+}
 var uploadFile =  function() {
 let photo = document.getElementById("fileLoad").files[0];
 let req = new XMLHttpRequest();
 let formData = new FormData();
 
 formData.append("photo", photo);
-req.open("POST", '/upload/image');
+req.open("POST", "/upload/image");
 req.send(formData);
 req.onreadystatechange = function() {
     if (req.readyState === 4) {
@@ -384,18 +408,20 @@ var findServicePath = function(filename) {
         //if .jpg/.gif/.png do something
         case 'jpg':
         case 'jpeg':
-            path = "jpeg";
+            path = "http://localhost:8000/img/jpg/";
             break;
         case 'gif':
+            path = "http://localhost:8000/img/gif/";
+            break;
         case 'png':
-            path = "png";
+            path = "http://localhost:8000/img/png/";
             break;
         case 'tiff':
         case 'tif':
-            path = "tiff";
+            path = "http://localhost:8000/img/tif/";
             break;
         case 'pdf':
-            path = "pdf";
+            path = "http://localhost:8000/document/pdf/";
             break;
     }
     //alert(path)
@@ -413,19 +439,39 @@ var renderThumbNail = function (filename, event, page) {
   var currPage = !!page ? page : $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
   console.log('rendering thumbanil..'+pagVal);
-  var   url= '/'+findServicePath(file)+'/rendernail?random='+Math.random();
+  var   url= findServicePath(file)+'/thumbnail?random='+Math.random();
   var data= {
+    filename: file,
     page: currPage,
-    url: file,
-    totalpages: lastPage
+    filedimension: 150,
+    pages: lastPage
   };
-  $.post(url, data,function(data) {
-      var images = data.images;
-      var display_thumbnail = $("#display-thumbnail");
-      display_thumbnail.html(images);
-      display_thumbnail.show();
+  var headers = {
+    contentType: 'application/json'
+  }
+  $.ajax({
+    url: url,
+    type: "POST",
+    beforeSend: function(request) {
+      request.setRequestHeader("content-type", 'application/json');
+    },
+    data: JSON.stringify(data),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success : function(data) {
+      images = [];
+      data.data.forEach(function (item, index) {
+        dataval = "data:image/png;base64,"+item.substring(2, item.length-1);
+        var name = "rdr-image_"+(index+1);
+        var imageCreated = '<img id="'+name+'" src="'+dataval+'" />';
+        images.push(imageCreated);
+      });
+        var display_thumbnail = $("#display-thumbnail");
+        display_thumbnail.html(images);
+        display_thumbnail.show();
+    }
   });
-};
+}
 
 
 var renderThumbNailOnScroll = function (filename, event, page) {
@@ -436,20 +482,39 @@ var renderThumbNailOnScroll = function (filename, event, page) {
   var lastPage =  $("#totalpages").html();
   console.log('rendering thumbanil..'+currPage);
 
-  var   url= '/'+findServicePath(file)+'/rendernail?random='+Math.random();
+  var   url= findServicePath(file)+'/thumbnail?random='+Math.random();
   var data= {
+    filename: file,
     page: currPage,
-    url: file,
-    totalpages: lastPage
+    filedimension: 150,
+    pages: lastPage
   };
-  $.post(url, data,function(data) {
-      var images = data.images;
+  $.ajax({
+    url: url,
+    type: "POST",
+    beforeSend: function(request) {
+      request.setRequestHeader("content-type", 'application/json');
+    },
+    data: JSON.stringify(data),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success : function(data) {
+      images = [];
+      var idOf = $( "div[id^=display-thumbnail] img:last-child").attr('id');
+      rdrPage = idOf.match(/\d+/g)[0];
+      data.data.forEach(function (item, index) {
+        dataval = "data:image/png;base64,"+item.substring(2, item.length-1);
+        var name = "rdr-image_"+(parseInt(rdrPage)+index);
+        var imageCreated = '<img id="'+name+'" src="'+dataval+'" />';
+        images.push(imageCreated);
+      });
       var display_thumbnail = $("#display-thumbnail");
        $( "div[id^=display-thumbnail] img:last-child" ).remove();
       display_thumbnail.append(images);
       display_thumbnail.show();
+    }
   });
-};
+}
 
     var drawRotated = function (degrees){
 
