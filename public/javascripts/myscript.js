@@ -27,14 +27,8 @@ $(document).ready(function(){
 
   $('#display-thumbnail').scroll(function() {
     var display_thumbnail = $("#display-thumbnail");
-    if(display_thumbnail.is(":visible")) {
-    //  display_thumbnail.hide();
-    }
+
     var obj = document.getElementById('display-thumbnail');
-    console.log(obj.scrollHeight)
-    console.log(obj.scrollTop)
-    console.log(obj.clientHeight)
-    console.log('......')
     var rdrPage = 1;
     if (obj.clientHeight + obj.scrollTop >=  obj.scrollHeight)
     {
@@ -42,15 +36,11 @@ $(document).ready(function(){
       rdrPage = idOf.match(/\d+/g)[0];
       var lastPage =  $("#totalpages").html();
       if (rdrPage == lastPage) {
-        console.log('reached last');
         return;
       }
 
       renderThumbNailOnScroll(null,null, rdrPage);
-    }// else if (obj.scrollTop == 0) {
-    //  var idOf = $( "div[id^=display-thumbnail] img:first-child" ).attr('id');
-      //rdrPage = idOf.match(/\d+/g)[0];
-    //}
+    }
 
   });
   $('body').bind('DOMNodeInserted' , function(event) {
@@ -64,9 +54,9 @@ $(document).ready(function(){
    });
 
 });
-
-var zoomto100 = function(){
-
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+const zoomto100 = () => {
     var imgOut = $('#rdr-image');
     var imgdiv = $('#display-image');
     var zoomx = 1.5;
@@ -172,7 +162,6 @@ var crop = function() {
     zoom: function(e) {
     },
     crop(event) {
-      console.log(JSON.stringify(event.detail));
       event.preventDefault();
     },
     ready: function() {
@@ -257,7 +246,6 @@ var getCorodinates = function(object, coordinateName) {
 
   var imgOut = object;
   var matrix = imgOut.css('transform');
-  //alert('translate_val..'+(matrix == 'none'));
   if (matrix == 'none') {
     if (coordinateName == 'scaleX') return 1;
     if (coordinateName == 'skewY') return 0;
@@ -268,10 +256,7 @@ var getCorodinates = function(object, coordinateName) {
 
   }
   var translate_val = matrix.match(/-?[\d\.]+/g);
-//  alert(matrix)
-  //alert('translate_val..'+translate_val)
   var matrixVal = translate_val.toString().split(',');
-  //alert(matrixVal)
   if (matrixVal.length >= 6 ) {
     if (coordinateName == 'scaleX') return matrixVal[0];
     if (coordinateName == 'skewY') return matrixVal[1];
@@ -307,7 +292,6 @@ var zoomout = function(){
   //imgOut.addClass('rt-transform');
 //  transform: scaleX(1.5) scaleY(1.5) rotate(0deg);
   var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
-  //alert(value)
   imgOut.css({transform: value});
   if (zoomx != 1 || zoomy != 1) {
     if(imgAngle == 0) {
@@ -336,13 +320,15 @@ var renderPage = function (filename, event, page, showThumbnail) {
   } else if('last' == event) {
     pagVal = lastPage;
   }
-  console.log('rendering page..'+pagVal);
   var data = {
     page: pagVal,
     filename: file
   };
   var url= findServicePath(file)+'?page='+pagVal+"&random="+Math.random()
-
+  if(url.indexOf('pdf') >= 0 ) {
+      renderPDF(url, data, showThumbnail)
+      return
+  }
   $.ajax({
     url: url,
     type: "POST",
@@ -353,15 +339,12 @@ var renderPage = function (filename, event, page, showThumbnail) {
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function(data) {
-      //console.log("data.."+data.totalPages +"-"+data.currentpage);
-      //"data:image/png;base64,"+decodeBase64(resdata.data.substring(1))
       dataval = "data:image/png;base64,"+data.data.substring(2, data.data.length-1);
       var imaageCreated = '<img id="rdr-image" src="'+dataval+'" />';
       $("#display-image").html(imaageCreated);
       $("#totalpages").html(data.total_pages);
       $("#currentpage").val(data.page);
       $("#refCurrentPage").val(data.page);
-    //  $("#filename").val(data.filename);
       if(showThumbnail) {
         $("#display-thumbnail").show();
       } else {
@@ -387,12 +370,10 @@ req.send(formData);
 req.onreadystatechange = function() {
     if (req.readyState === 4) {
       var data = JSON.parse(req.response);
-    //  console.log("data.."+JSON.stringify(data));
         console.log("data.filename.."+JSON.stringify(data.filename));
         $("#filename").val(data.filename);
         $("#display-thumbnail").css('display', 'none');
       renderPage(data.filename, null, 1, false);
-      //callback(xhr.response);
     }
   }
 
@@ -402,7 +383,6 @@ req.onreadystatechange = function() {
 
 var findServicePath = function(filename) {
   var ext = filename.split('.').pop().toLowerCase();
-  //alert(ext)
   var path;
     switch(ext) {
         //if .jpg/.gif/.png do something
@@ -424,7 +404,6 @@ var findServicePath = function(filename) {
             path = "http://localhost:8000/document/pdf/";
             break;
     }
-    //alert(path)
   return path;
 }
 
@@ -438,7 +417,6 @@ var renderThumbNail = function (filename, event, page) {
   var pagVal = page;
   var currPage = !!page ? page : $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
-  console.log('rendering thumbanil..'+pagVal);
   var   url= findServicePath(file)+'/thumbnail?random='+Math.random();
   var data= {
     filename: file,
@@ -448,6 +426,11 @@ var renderThumbNail = function (filename, event, page) {
   };
   var headers = {
     contentType: 'application/json'
+  }
+
+  if(url.indexOf('pdf') >= 0 ) {
+      renderPDfThumbnail(url, data)
+      return
   }
   $.ajax({
     url: url,
@@ -473,15 +456,172 @@ var renderThumbNail = function (filename, event, page) {
   });
 }
 
+var renderPDfThumbnailScroll = async function(url, dataGiven) {
+  $.ajax({
+    url: url,
+    type: "POST",
+    beforeSend: function(request) {
+      request.setRequestHeader("content-type", 'application/json');
+    },
+    data: JSON.stringify(dataGiven),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success:  function(data) {
+      imagesValue = []
+      data.data.forEach(function (item, index) {
+        imagesValue.push(pdfPageThumbnail(item,parseInt(dataGiven.page)+index));
+      });
+      const values =  pdfThumbnailOnScrollResponse(imagesValue);
+  }
+});
+
+}
+
+var renderPDfThumbnail = async function(url, data) {
+  $.ajax({
+    url: url,
+    type: "POST",
+    beforeSend: function(request) {
+      request.setRequestHeader("content-type", 'application/json');
+    },
+    data: JSON.stringify(data),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: async function(data) {
+      images = [];
+      imagesValue = []
+      data.data.forEach(function (item, index) {
+        imagesValue.push(pdfPageThumbnail(item,index));
+      });
+      const values =  pdfThumbnailResponse(imagesValue);
+  }
+});
+
+}
+
+const pdfThumbnailResponse = (imagesValue) => {
+  const finalImages =  Promise.allSettled(imagesValue).then(function(values) {
+      var imageVal = [];
+      values.forEach((item, i) => {
+        imageVal.push(item['value'])
+      });
+      var display_thumbnail = $("#display-thumbnail");
+      display_thumbnail.html(imageVal);
+      display_thumbnail.show();
+   });
+}
+
+const pdfThumbnailOnScrollResponse = (imagesValue) => {
+  const finalImages =  Promise.allSettled(imagesValue).then(function(values) {
+      var imageVal = [];
+      values.forEach((item, i) => {
+        imageVal.push(item['value'])
+      });
+      var display_thumbnail = $("#display-thumbnail");
+       $( "div[id^=display-thumbnail] img:last-child" ).remove();
+      display_thumbnail.append(imageVal);
+      display_thumbnail.show();
+   });
+}
+
+const pdfPageThumbnail = (item, index) => {
+  var pdfData = window.atob(item.substring(2, item.length -1));
+  var loadingTask = pdfjsLib.getDocument({data: pdfData});
+  var canvas = createCanvas("pdf-the-canvas-"+(index+1));
+  return loadingTask.promise.then( pdf => {
+              return  pdf.getPage(1);
+            }).then( page => {
+                       var scale = 1;
+                       var viewport = page.getViewport({scale: scale});
+                       var context = canvas.getContext('2d');
+                       canvas.height = viewport.height;
+                       canvas.width = viewport.width;
+                       var renderContext = {
+                         canvasContext: context,
+                         viewport: viewport
+                       };
+                       var renderTask = page.render(renderContext);
+                       return renderTask;
+          }).then(renderTask => {
+                  return renderTask.promise;
+          }).then((task) => {
+                   const uri = canvas.toDataURL('image/png');
+                   var name = "rdr-image_"+(index+1);
+                   var imageCreated = '<img id="'+name+'" src="'+uri+'" />';
+                   canvas.remove();
+                   return imageCreated;
+          });
+}
+
+const createCanvas = (name) => {
+  var canvasCreate = document.createElement('canvas');
+  canvasCreate.setAttribute('id', name);
+  canvasCreate.style.display = "none";
+  document.body.appendChild(canvasCreate);
+  return document.getElementById(canvasCreate.getAttribute('id'));
+};
+
+var renderPDF = function(url, data, showThumbnail) {
+  $.ajax({
+    url: url,
+    type: "POST",
+    beforeSend: function(request) {
+      request.setRequestHeader("content-type", 'application/json');
+    },
+    data: JSON.stringify(data),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function(data) {
+      var pdfData = window.atob(data.data.substring(2, data.data.length -1));
+      // Using DocumentInitParameters object to load binary data.
+      var loadingTask = pdfjsLib.getDocument({data: pdfData});
+      loadingTask.promise.then(function(pdf) {
+        // Fetch the first page
+        var pageNumber = 1;
+        pdf.getPage(pageNumber).then(function(page) {
+          var scale = 1;
+          var viewport = page.getViewport({scale: scale});
+          // Prepare canvas using PDF page dimensions
+          var canvas = document.getElementById('the-canvas');
+          var context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          // Render PDF page into canvas context
+          var renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          var renderTask = page.render(renderContext);
+          renderTask.promise.then(function () {
+            const uri = canvas.toDataURL('image/png');
+            var imaageCreated = '<img id="rdr-image" src="'+uri+'" />';
+            $("#display-image").html(imaageCreated);
+          });
+        });
+      }, function (reason) {
+        // PDF loading error
+        console.error(reason);
+      });
+      $("#totalpages").html(data.total_pages);
+      $("#currentpage").val(data.page);
+      $("#refCurrentPage").val(data.page);
+    //  $("#filename").val(data.filename);
+      if(showThumbnail) {
+        $("#display-thumbnail").show();
+      } else {
+        $("display-thumbnail").hide();
+      }
+  }
+});
+
+}
+
 
 var renderThumbNailOnScroll = function (filename, event, page) {
   var file = !!filename ? filename : $('#filename').val();
-
   var pagVal = page;
   var currPage = !!page ? page : $("#refCurrentPage").val();
   var lastPage =  $("#totalpages").html();
-  console.log('rendering thumbanil..'+currPage);
-
   var   url= findServicePath(file)+'/thumbnail?random='+Math.random();
   var data= {
     filename: file,
@@ -489,6 +629,10 @@ var renderThumbNailOnScroll = function (filename, event, page) {
     filedimension: 150,
     pages: lastPage
   };
+  if(url.indexOf('pdf') >= 0 ) {
+      renderPDfThumbnailScroll(url, data)
+      return
+  }
   $.ajax({
     url: url,
     type: "POST",

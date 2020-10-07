@@ -96,6 +96,60 @@ const getPage = async function(filename, currpage,res) {
   }
 }
 
+convertDataURIToBinary =  function(dataURI) {
+         var BASE64_MARKER = ';base64,',
+           base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length,
+           base64 = dataURI.substring(base64Index),
+           raw = window.atob(base64),
+           rawLength = raw.length,
+           array = new Uint8Array(new ArrayBuffer(rawLength));
+
+         for (var i = 0; i < rawLength; i++) {
+           array[i] = raw.charCodeAt(i);
+         }
+         return array;
+       }
+
+const getPage1 = async function(filename, currpage,res) {
+
+  var pdfAsDataUri = "data:application/pdf;base64,JVBERi0xLjUK..."; // shortened
+  var pdfAsArray = convertDataURIToBinary(pdfAsDataUri);
+  pdfjsLib.getDocument(pdfAsArray)
+  const page = await pdf.getPage(parseInt(currpage));
+  totalPages = pdf.numPages;
+  const scale = 1;
+  const viewport = page.getViewport({scale: 1});
+  var canvasFactory = new NodeCanvasFactory();
+     var canvasAndContext = canvasFactory.create(
+       viewport.width,
+       viewport.height
+     );
+     // Render PDF page into canvas context
+     var renderContext = {
+        canvasContext: canvasAndContext.context,
+        viewport: viewport,
+        canvasFactory: canvasFactory,
+      };
+     var renderTask = page.render(renderContext);
+    try {
+      renderTask.promise.then(function () {
+        const uri = canvasAndContext.canvas.toDataURL('image/png').split(';base64,').pop()
+        var buff =  Buffer.from(uri, 'base64');
+        sharp(buff).resize(675, 575, {fit: sharp.fit.fill}).withMetadata().toBuffer(function(err, dataval)  {
+          console.error(err)
+          var dataImg= "data:image/png;base64,"+dataval.toString('base64');
+          var imgname = "rdr-image";
+          var data = '<img id='+imgname+' src="'+dataImg+'" ></img>';
+          res.send({ title: 'Express', filename:filename, data: data, currentpage: currpage, totalPages: totalPages});
+        })
+    });
+  } catch(rxp) {
+    console.log('in ')
+    console.err(rxp);
+  }
+}
+
+
 router.post('/rendernail', function(req, res, next) {
   const thumbnails = getThumbnails(req, res);
 });
