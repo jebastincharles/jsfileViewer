@@ -366,7 +366,7 @@ let req = new XMLHttpRequest();
 let formData = new FormData();
 
 formData.append("photo", photo);
-req.open("POST", "/upload/image");
+req.open("POST", "http://127.0.0.1:8000/viewer/load/");
 req.send(formData);
 req.onreadystatechange = function() {
     if (req.readyState === 4) {
