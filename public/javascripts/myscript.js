@@ -271,7 +271,8 @@ var getCorodinates = function(object, coordinateName) {
 
 var download = function(){
   var filename = $('#filename').val();
-  window.location="/tiff/download?file="+filename;
+  url= findServicePath(filename)+"/download?filename="+filename+"&random="+Math.random();
+  window.location=url;
 }
 
 var print = function(){
