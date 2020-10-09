@@ -66,6 +66,9 @@ const zoomto100 = () => {
     imgOut.css({transform: value});
     $('#zoomx').val(zoomx);
     $('#zoomy').val(zoomy);
+    if (imgAngle == 0) {
+      imgOut.css({'transform-origin': '0% 0%'});
+    }
     imgdiv.css('overflow', 'scroll');
 }
 
@@ -183,7 +186,7 @@ var fittoheight = function(){
   var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
   imgOut.css({transform: value});
   $('#zoomy').val(zoomy);
-  imgOut.height(imgdiv.innerHeight() + "px");
+  imgOut.height((imgdiv.innerHeight() - 50) + "px");
   imgdiv.css('overflow-y','hidden');
 }
 
@@ -196,7 +199,7 @@ var fittowidth = function(){
   var value = "scaleX("+zoomx+") scaleY("+zoomy+") rotate("+imgAngle+"deg)";
   imgOut.css({transform: value});
   $('#zoomx').val(zoomx);
-  imgOut.width(imgdiv.innerWidth() + "px");
+  imgOut.width((imgdiv.innerWidth() - 50) + "px");
   imgdiv.css('overflow-x','hidden');
 
 }
@@ -213,8 +216,8 @@ var fittopage = function(){
   $('#zoomx').val(zoomx);
   $('#zoomy').val(zoomy);
 
-  imgOut.width(imgdiv.innerWidth() + "px");
-  imgOut.height(imgdiv.innerHeight() + "px");
+  imgOut.width((imgdiv.innerWidth() - 50) + "px");
+  imgOut.height((imgdiv.innerHeight() - 50) + "px");
   imgdiv.css('overflow','hidden');
 }
 
@@ -230,11 +233,12 @@ var zoomin = function(){
   imgOut.css({transform: value});
   if (zoomx != 1 || zoomy != 1) {
     if(imgAngle == 0) {
-      imgOut.css({'transform-origin': 'top left'});
+      //imgOut.css({'transform-origin': 'top left'});
     } else  {
       //imgOut.css({'transform-origin': 'top left'});
       imgOut.css({'transform-origin': '50% 50%'});
     }
+    imgOut.css({'transform-origin': '50% 50%'});
   }
   $('#zoomx').val(zoomx);
   $('#zoomy').val(zoomy);

@@ -44,7 +44,7 @@ nav {
 }
 .container {
   width: 50% !important;
-  height: 700px;
+  height: 90%;
   border: 2px solid #ccc;
 /*  position: absolute; */
   /*overflow: hidden;v*/
@@ -62,10 +62,14 @@ nav {
   overflow: auto;
   vertical-align: middle;
 }
+
+#display-image img{
+  margin: 2em;
+}
 #display-thumbnail {
   width: 21%;
   float: right;
-  height: 585px;
+  height: 100%;
   overflow-y: scroll;
 }
 
